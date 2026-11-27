@@ -334,6 +334,28 @@ button { color: inherit; -webkit-appearance: none; appearance: none; font-family
 #delAllBtn { font-size: 13px; }
 .del-all-btn { width: 100%; height: 46px; border: 1.5px solid #e55; border-radius: 23px; background: #fff; color: #e55; font-size: 15px; cursor: pointer; font-family: inherit; transition: .2s; }
 .del-all-btn:active { background: #ffe8e8; }
+/* ===== 底部导航固定在屏幕最底部 ===== */
+.dock {
+  position: fixed;
+  left: 50%;
+  right: auto;
+  transform: translateX(-50%);
+  width: calc(100% - 9.2vw);
+  max-width: 480px;
+  bottom: calc(env(safe-area-inset-bottom) + 10px);
+  z-index: 100;
+}
+
+/* 主页内容底部留白，滑到底不被导航挡住 */
+.phone { padding-bottom: 120px; }
+.phone > .dots { margin-bottom: 0; }
+
+/* ===== 字卡库标题保持横排 ===== */
+.cl-top { flex-wrap: wrap; row-gap: 10px; }
+.cl-title { flex: 0 0 auto; white-space: nowrap; font-size: 24px; }
+.cl-io { flex: 1 1 auto; justify-content: flex-end; flex-wrap: nowrap; gap: 6px; }
+.cl-io button { height: 34px; padding: 0 10px; font-size: 12px; white-space: nowrap; }
+.cl-new { height: 34px; padding: 0 12px; font-size: 12px; white-space: nowrap; }
 
 
 
