@@ -135,11 +135,11 @@ function renderCardsPage() {
 
 function renderFilterChips() {
   const all = ['全部', ...groupList];
-  $('filterChips').innerHTML = all.map(g =>
-    `<button class="cl-ftag ${g === filterGroup ? 'on' : ''}" onclick="setFilter('${g}')">${g}</button>`
-  ).join('') + `<button class="cl-ftag" onclick="addGroup()">＋ 新建分组</button>`;
+  $('filterChips').innerHTML = all.map(g => {
+    const longpress = (g === '全部' || g === '未分组') ? '' : `oncontextmenu="delGroup('${g}');return false;" ontouchstart="startHold('${g}')" ontouchend="clearHold()"`;
+    return `<button class="cl-ftag ${g === filterGroup ? 'on' : ''}" onclick="setFilter('${g}')" ${longpress}>${g}</button>`;
+  }).join('') + `<button class="cl-ftag" onclick="addGroup()">＋ 新建分组</button>`;
 }
-
 window.setFilter = g => { filterGroup = g; renderFilterChips(); renderCards(); renderStat(); };
 
 window.addGroup = () => {
@@ -530,3 +530,27 @@ $('clearChat').addEventListener('click', () => {
   renderMsgs();
   showToast('聊天记录已清空');
 });
+// ── 分组长按删除 ──────────────────────────────────────────
+let holdTimer = null;
+
+window.startHold = g => {
+  holdTimer = setTimeout(() => {
+    delGroup(g);
+  }, 600);
+};
+
+window.clearHold = () => {
+  if (holdTimer) { clearTimeout(holdTimer); holdTimer = null; }
+};
+
+window.delGroup = g => {
+  if (!confirm(`删除分组「${g}」？里面的字卡会移到未分组`)) return;
+  const moved = cardData[g] || [];
+  cardData['未分组'].push(...moved);
+  delete cardData[g];
+  groupList = groupList.filter(x => x !== g);
+  if (filterGroup === g) filterGroup = '全部';
+  saveCardData();
+  renderCardsPage();
+  showToast(`「${g}」已删除，字卡移至未分组`);
+};
