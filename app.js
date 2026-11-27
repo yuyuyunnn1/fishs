@@ -583,3 +583,7 @@ $('changeChatBg').addEventListener('click', () => {
   };
   inp.click();
 });
+// ── 弹层打开时隐藏底部导航 ─────────────────────────────────
+new MutationObserver(() => {
+  $('phone').classList.toggle('modal-open', $('modalBg').classList.contains('show'));
+}).observe($('modalBg'), { attributes: true, attributeFilter: ['class'] });

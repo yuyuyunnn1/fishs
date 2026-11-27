@@ -368,6 +368,7 @@ button { color: inherit; -webkit-appearance: none; appearance: none; font-family
 
 /* 聊天背景 */
 .msgs { background-size: cover; background-position: center; background-repeat: no-repeat; }
-
+/* 弹层打开时隐藏导航 */
+.phone.modal-open .dock { display: none; }
 
 
