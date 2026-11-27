@@ -23,20 +23,25 @@
     </div>
   </div>
 
-  <!-- 时间组件 -->
+   <!-- 时间组件 -->
   <div class="card clock">
     <div class="clock-top">
       <div>
         <div class="time"><span id="time">07:14:50</span><small id="ampm">PM</small></div>
-        <div class="date" id="date">2026/10/23</div>
       </div>
+
       <div class="day">
-        <div class="hearts">🖤🩶🤍</div>
-        <div class="date" id="weekday">Friday</div>
+        <div class="date" id="weekday" style="font-size:16px;font-weight:600;color:var(--ink);margin-top:0">Friday</div>
       </div>
     </div>
     <div class="week" id="week">
-      <span>日</span><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span>
+      <span><span>日</span><span>-</span></span>
+      <span><span>一</span><span>-</span></span>
+      <span><span>二</span><span>-</span></span>
+      <span><span>三</span><span>-</span></span>
+      <span><span>四</span><span>-</span></span>
+      <span><span>五</span><span>-</span></span>
+      <span><span>六</span><span>-</span></span>
     </div>
   </div>
 
@@ -66,31 +71,29 @@
   </div>
 
   <!-- 音乐胶囊 -->
-  <div class="player">
+  <div class="player" style="background:linear-gradient(135deg,#f5f5f5 0%,#fff 100%);color:#111;box-shadow:0 8px 20px rgba(0,0,0,.12)">
     <div class="p-cover pickable" id="cover" data-img="cover"></div>
     <div class="p-info"><b>YOU MAKE ME SAD</b><span>LOVELY BOMB</span></div>
-    <button class="p-btn" id="playBtn">
-      <svg id="playIcon" width="18" height="18" viewBox="0 0 24 24" fill="#fff"><path d="M7 4l13 8-13 8z"/></svg>
+    <button class="p-btn" id="playBtn" style="background:rgba(0,0,0,.08)">
+      <svg id="playIcon" width="18" height="18" viewBox="0 0 24 24" fill="#111"><path d="M7 4l13 8-13 8z"/></svg>
     </button>
-    <button class="p-btn heart" id="heartBtn">
-      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M12 21s-8-5-8-11a4.5 4.5 0 018-2.8A4.5 4.5 0 0120 10c0 6-8 11-8 11z"/></svg>
+    <button class="p-btn heart" id="heartBtn" style="background:rgba(0,0,0,.08)">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2"><path d="M12 21s-8-5-8-11a4.5 4.5 0 018-2.8A4.5 4.5 0 0120 10c0 6-8 11-8 11z"/></svg>
     </button>
   </div>
-
   <div class="dots"><i class="on"></i><i></i></div>
 
   <!-- Dock -->
   <div class="dock">
     <div class="dicon">
-      <svg viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="1.6"><rect x="5" y="2" width="14" height="20" rx="3"/><rect x="8" y="18" width="8" height="2" rx="1" fill="#333" stroke="none"/></svg>
+      <svg viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="1.6"><path d="M3 12l9-9 9 9M5 10v10a2 2 0 002 2h10a2 2 0 002-2v-10"/><rect x="9" y="13" width="6" height="6"/></svg>
     </div>
     <div class="dicon" id="openCards">
       <svg viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M7 8h10M7 12h10M7 16h6"/></svg>
     </div>
     <div class="dicon" id="openSet">
-      <svg viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
-    </div>
-  </div>
+      <svg viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="1.6"><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="8"/><path d="M12 2v4m0 12v4M22 12h-4M4 12H0M19.07 4.93l-2.83 2.83M7.76 16.24l-2.83 2.83M19.07 19.07l-2.83-2.83M7.76 7.76L4.93 4.93"/></svg>
+    </div>  </div>
 
   <!-- ===== 微信聊天页 ===== -->
   <div class="page" id="chatPage">
@@ -116,9 +119,43 @@
         <div id="clearChat" style="color:#e55">清空聊天记录</div>
       </div>
     </div>
+    <!-- 引用预览条 -->
+    <div class="quote-bar" id="quoteBar" style="display:none">
+      <div class="quote-preview" id="quotePreview"></div>
+      <button class="quote-cancel" id="quoteCancelBtn">×</button>
+    </div>
     <div class="msgs" id="msgs"></div>
+    <!-- 十字按钮面板 -->
+    <div class="plus-panel" id="plusPanel">
+      <div class="pp-grid">
+        <div class="pp-item" data-act="call">
+          <div class="pp-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M6 3h3l2 5-2.5 1.5a12 12 0 006 6L16 13l5 2v3a2 2 0 01-2 2A16 16 0 014 5a2 2 0 012-2z"/></svg></div>
+          <span>通话</span>
+        </div>
+        <div class="pp-item" data-act="transfer">
+          <div class="pp-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"><path d="M12 18V6"/><path d="M7 11l5-5 5 5"/><path d="M5 21h14"/></svg></div>
+          <span>转账</span>
+        </div>
+        <div class="pp-item" data-act="emoji">
+          <div class="pp-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="1.6" stroke-linecap="round"><circle cx="12" cy="12" r="9"/><circle cx="9" cy="10" r="1" fill="#888"/><circle cx="15" cy="10" r="1" fill="#888"/><path d="M8.5 14.5a4 4 0 007 0"/></svg></div>
+          <span>表情包</span>
+        </div>
+        <div class="pp-item" data-act="pat">
+          <div class="pp-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="1.6" stroke-linejoin="round"><path d="M12 3.5l2.6 5.3 5.9.9-4.3 4.1 1 5.8-5.2-2.7-5.2 2.7 1-5.8L3.5 9.7l5.9-.9z"/></svg></div>
+          <span>拍一拍</span>
+        </div>
+        <div class="pp-item" data-act="choice">
+          <div class="pp-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="1.6" stroke-linejoin="round"><rect x="3.5" y="3.5" width="17" height="17" rx="4"/><path d="M9 15.5l.8-2.7 5-5 2 2-5 5-2.8.7z"/></svg></div>
+          <span>抉择</span>
+        </div>
+        <div class="pp-item" data-act="talk">
+          <div class="pp-icon"><svg viewBox="0 0 24 24" fill="none" stroke="#888" stroke-width="1.8" stroke-linecap="round"><path d="M3 10v4M7 7v10M11 9v6M15 5v14M19 10v4"/></svg></div>
+          <span>他说</span>
+        </div>
+      </div>
+    </div>
     <div class="c-bar">
-      <button class="plus">
+      <button class="plus" id="openEmojiBtn">
         <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
       </button>
       <div class="c-input">
@@ -128,6 +165,57 @@
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2"><path d="M22 2L11 13"/><path d="M22 2L15 22l-4-9-9-4 20-7z"/></svg>
       </button>
     </div>
+    <!-- 表情库弹层 -->
+    <div class="emoji-bg" id="emojiBg">
+      <div class="emoji-modal">
+        <div class="emoji-top">
+          <h4>表情包库</h4>
+          <button class="emoji-close" id="emojiClose">✕</button>
+        </div>
+        <div class="emoji-list" id="emojiList"></div>
+        <div class="emoji-bar">
+          <button class="emoji-add" id="addEmojiBtn">＋ 添加表情包</button>
+        </div>
+      </div>
+    </div>
+    <!-- 消息长按菜单 -->
+    <div class="msg-menu" id="msgMenu">
+      <div id="msgMenuQuote">引用</div>
+      <div id="msgMenuDel" style="color:#e55">删除</div>
+    </div>    <!-- 转账金额输入 -->
+    <div class="tf-sheet" id="tfSheet">
+      <div class="tf-sheet-inner">
+        <h4>转账金额</h4>
+        <input type="text" id="tfAmount" inputmode="decimal" placeholder="请输入金额">
+        <div class="modal-row">
+          <button class="modal-cancel" id="tfCancel">取消</button>
+          <button class="modal-ok" id="tfConfirm">转账</button>
+        </div>
+      </div>
+    </div>
+    <!-- 转账详情 -->
+    <div class="tf-pop" id="tfPop">
+      <div class="tf-pop-inner">
+        <div class="tf-pop-amt" id="tfPopAmt">¥0.00</div>
+        <div class="modal-row">
+          <button class="modal-cancel" id="tfRefund">退还</button>
+          <button class="modal-ok" id="tfAccept">接收</button>
+        </div>
+      </div>
+    </div>   
+     <!-- 抉择输入弹层 -->
+    <div class="tf-sheet" id="chSheet">
+      <div class="tf-sheet-inner">
+        <h4>创建抉择</h4>
+        <input type="text" id="chTitle" placeholder="输入标题或问题" style="font-size:16px;height:48px">
+        <textarea id="chOpts" placeholder="每行一个选项，至少 2 个"></textarea>
+        <div class="modal-row">
+          <button class="modal-cancel" id="chCancel">取消</button>
+          <button class="modal-ok" id="chConfirm">发送</button>
+        </div>
+      </div>
+    </div>
+
   </div>
 
   <!-- ===== 字卡库页 ===== -->
@@ -150,8 +238,6 @@
     <div class="cl-filter" id="filterChips"></div>
     <div class="cl-list" id="cardList"></div>
     <div class="cl-stat" id="cardStat"></div>
-
-    <!-- 新增/编辑弹层 -->
     <div class="modal-bg" id="modalBg">
       <div class="modal">
         <h4 id="modalTitle">新增字卡</h4>
@@ -194,20 +280,39 @@
         <div class="sl-wrap">
           <div class="prob-row"><span>表情包概率</span><b id="emojiProbVal">50%</b></div>
           <input type="range" id="emojiProb" min="0" max="100" step="10" value="50">
-          <div class="prob-tip">0% 只发字卡，100% 只发表情包，50% 各一半</div>
+          <div class="prob-tip">0% 只发字卡，100% 只发表情包</div>
         </div>
-              <div class="sl-wrap" style="border-top:1px solid #e8e8e8;padding-top:16px;margin-top:16px">
-          <button class="del-all-btn" id="resetBtn">恢复出厂设置</button>
+        <div class="sl-wrap">
+          <div class="prob-row"><span>对方引用概率</span><b id="quoteProbVal">30%</b></div>
+          <input type="range" id="quoteProb" min="0" max="100" step="10" value="30">
+          <div class="prob-tip">对方回复时有此概率引用你最近一条消息</div>
+        </div>        <div class="sl-wrap">
+          <div class="prob-row"><span>对方转账概率</span><b id="peerTfProbVal">20%</b></div>
+          <input type="range" id="peerTfProb" min="0" max="100" step="10" value="20">
+          <div class="prob-tip">对方回复时有此概率给你转账</div>
         </div>
+        <div class="sl-wrap">
+          <div class="sl-row"><span>对方转账金额</span></div>
+          <input type="text" id="peerTfAmts" class="tf-input" placeholder="如：5.20, 13.14, 52">
+          <div class="prob-tip">可填多个，用逗号分隔，每次随机选一个</div>
+        </div>
+      </div>
+      <div class="set-card" style="margin-top:14px;text-align:center">
+        <button class="backup-btn" id="backupBtn">📦 全量备份</button>
+        <div class="prob-tip" style="margin-top:8px">保存所有数据到本地文件</div>
+      </div>
+      <div class="set-card" style="margin-top:14px;text-align:center">
+        <button class="del-all-btn" id="resetBtn">恢复出厂设置</button>
+        <div class="prob-tip" style="margin-top:8px;color:#e55">清除全部数据，不可撤销</div>
       </div>
     </div>
   </div>
-  <!-- 隐藏文件选择 -->
+
   <input type="file" id="filePicker" accept="image/*" style="display:none">
   <input type="file" id="bgPicker" accept="image/*" style="display:none">
   <input type="file" id="importPicker" accept=".json,.txt" style="display:none">
+  <input type="file" id="restorePicker" accept=".json" style="display:none">
   <div class="toast" id="toast"></div>
-
 </div>
 <script src="app.js"></script>
 </body>

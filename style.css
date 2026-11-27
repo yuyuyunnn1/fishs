@@ -1,4 +1,5 @@
 :root {
+
   --banner: url("https://picsum.photos/seed/banner/800/400?grayscale");
   --avatar: url("https://picsum.photos/seed/avatar/300/300?grayscale");
   --polaroid: url("https://picsum.photos/seed/polaroid/400/400?grayscale");
@@ -291,10 +292,6 @@ body { display: block; min-height: 100%; background: #ececec; }
   overflow-y: auto;
 }
 .phone::-webkit-scrollbar { display: none; }
-
-/* 顶部留出刘海/灵动岛的安全区 */
-.status { height: calc(env(safe-area-inset-top) + 14px); }
-
 /* 底部导航贴合屏幕，避开 Home 横条 */
 .dock {
   left: 4.6vw;
@@ -370,5 +367,199 @@ button { color: inherit; -webkit-appearance: none; appearance: none; font-family
 .msgs { background-size: cover; background-position: center; background-repeat: no-repeat; }
 /* 弹层打开时隐藏导航 */
 .phone.modal-open .dock { display: none; }
+/* ===== 引用条 ===== */
+.quote-bar { display: flex; align-items: center; padding: 8px 14px; background: #f7f7f7; border-top: 1px solid #eee; gap: 10px; }
+.quote-preview { flex: 1; font-size: 12px; color: #888; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; border-left: 3px solid #111; padding-left: 8px; }
+.quote-cancel { background: none; border: none; font-size: 20px; color: #aaa; cursor: pointer; }
+.quote-block { background: rgba(0,0,0,.06); border-left: 3px solid #999; border-radius: 6px; padding: 5px 8px; font-size: 12px; color: #888; margin-bottom: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px; }
+.row.me .quote-block { border-left-color: #555; background: rgba(255,255,255,.12); color: rgba(255,255,255,.7); }
+
+/* ===== 消息长按菜单 ===== */
+.msg-menu { position: fixed; background: #fff; border-radius: 14px; box-shadow: 0 10px 30px rgba(0,0,0,.18); overflow: hidden; display: none; z-index: 200; min-width: 100px; }
+.msg-menu.show { display: block; }
+.msg-menu div { padding: 13px 20px; font-size: 14px; cursor: pointer; }
+.msg-menu div:active { background: #f4f4f4; }
+
+/* ===== 表情库 ===== */
+.emoji-bg { position: fixed; inset: 0; background: rgba(0,0,0,.35); display: none; z-index: 70; }
+.emoji-bg.show { display: flex; align-items: flex-end; }
+.emoji-modal { width: 100%; max-width: 520px; margin: 0 auto; background: #fff; border-radius: 28px 28px 0 0; max-height: 65%; display: flex; flex-direction: column; }
+.emoji-top { display: flex; align-items: center; justify-content: space-between; padding: 18px 20px; border-bottom: 1px solid #f0f0f0; }
+.emoji-top h4 { font-size: 17px; font-weight: 700; }
+.emoji-close { background: none; border: none; font-size: 20px; cursor: pointer; color: #999; }
+.emoji-list { flex: 1; overflow-y: auto; padding: 12px 14px; display: grid; grid-template-columns: repeat(4, 1fr); gap: 10px; }
+.emoji-item { width: 100%; aspect-ratio: 1; border-radius: 14px; background: #f4f4f4; overflow: hidden; cursor: pointer; position: relative; display: grid; place-items: center; }
+.emoji-item img { width: 100%; height: 100%; object-fit: cover; }
+.emoji-item button { position: absolute; bottom: 2px; right: 2px; width: 22px; height: 22px; border-radius: 50%; background: rgba(200,0,0,.8); color: #fff; border: none; cursor: pointer; font-size: 13px; }
+.emoji-bar { padding: 12px 14px; border-top: 1px solid #f0f0f0; }
+.emoji-add { width: 100%; height: 44px; border: none; border-radius: 22px; background: #111; color: #fff; font-size: 15px; cursor: pointer; font-family: inherit; }
+
+/* ===== 备份按钮 ===== */
+.backup-btn { width: 100%; height: 46px; border: 1.5px solid #333; border-radius: 23px; background: #fff; color: #111; font-size: 15px; cursor: pointer; font-family: inherit; }
+.backup-btn:active { background: #f4f4f4; }
+
+/* 弹层打开时隐藏导航 */
+.phone.modal-open .dock { display: none; }
+
+/* 聊天背景 */
+#chatPage { background: #f7f7f7; }
+#chatPage .msgs { background-color: transparent; background-size: cover; background-position: center; background-repeat: no-repeat; }
+/* iOS 点击输入框防止自动放大 */
+#msgInput { font-size: 16px !important; }
+input[type=number] { font-size: 16px !important; }
+input[type=text] { font-size: 16px !important; }
+input[type=range] { font-size: 16px !important; }
+textarea { font-size: 16px !important; }
+
+/* iOS Safari 禁用缩放但保留长按右键菜单 */
+input, textarea { -webkit-user-select: text; }
+/* 引用块字体修复 */
+/* 引用块在气泡外面，统一浅底深字 */
+.row .quote-block {
+  border-left-color: #999;
+  background: #ececec;
+  color: #555;
+}
+.row.me .quote-block {
+  border-left-color: #111;
+  background: #e5e5e5;
+  color: #333;
+}
+/* ===== 周日期显示修复 ===== */
+.week { align-items: flex-start; }
+.week > span {
+  width: 30px;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 3px;
+  border-radius: 0;
+  background: none !important;
+  box-shadow: none !important;
+}
+.week > span > span:first-child {
+  font-size: 11px;
+  color: #b0b0b0;
+  line-height: 1.2;
+}
+.week > span > span:last-child {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  width: 26px;
+  height: 26px;
+  border-radius: 50%;
+  font-size: 13px;
+  font-weight: 700;
+  color: #111;
+  line-height: 1;
+  background: none;
+}
+.week > span.on > span:first-child { color: #111; font-weight: 600; }
+.week > span.on > span:last-child { background: #111; color: #fff; }
+/* ===== 十字按钮面板 ===== */
+.plus-panel { display: none; background: #f7f7f7; border-top: 1px solid #f0f0f0; padding: 18px 14px 10px; }
+.plus-panel.show { display: block; }
+.pp-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 18px 10px; }
+.pp-item { display: flex; flex-direction: column; align-items: center; gap: 8px; cursor: pointer; }
+.pp-icon { width: 60px; height: 60px; border-radius: 18px; background: #fff; box-shadow: 0 3px 10px rgba(0,0,0,.07); display: grid; place-items: center; transition: transform .15s; }
+.pp-icon svg { width: 26px; height: 26px; }
+.pp-item span { font-size: 12px; color: #666; }
+.pp-item:active .pp-icon { transform: scale(.94); }
+/* ===== 转账 ===== */
+.transfer { display: flex; align-items: center; gap: 10px; padding: 14px 16px; border-radius: 16px; min-width: 190px; cursor: pointer; }
+.row.me .transfer { background: #6b6b6b; color: #fff; }
+.row.peer .transfer { background: #efefef; color: #333; }
+.transfer.refunded { cursor: default; }
+.row.me .transfer.refunded { background: #6b6b6b; color: #d8d8d8; }
+.row.peer .transfer.refunded { background: #efefef; color: #9a9a9a; }
+.tf-icon { position: relative; width: 22px; height: 22px; display: grid; place-items: center; font-size: 16px; line-height: 1; flex-shrink: 0; margin-right: 6px; }
+.tf-icon em { position: absolute; right: -6px; bottom: -5px; font-size: 8px; font-style: normal; line-height: 1; color: #a8a8a8; white-space: nowrap; }
+.row.me .transfer .tf-icon em { color: #d0d0d0; }
+.tf-mid { flex: 1; }
+.tf-amt { font-size: 17px; font-weight: 700; letter-spacing: .3px; }
+.tf-label { font-size: 11px; margin-top: 3px; opacity: .75; }
+.tf-word { font-family: "Didot","Bodoni 72",Georgia,serif; font-style: italic; font-size: 12px; opacity: .5; white-space: nowrap; }
+
+/* 转账弹层 */
+.tf-sheet, .tf-pop { position: fixed; inset: 0; background: rgba(0,0,0,.35); display: none; z-index: 90; align-items: flex-end; }
+.tf-sheet.show, .tf-pop.show { display: flex; }
+.tf-sheet-inner, .tf-pop-inner { width: 100%; max-width: 520px; margin: 0 auto; background: #fff; border-radius: 28px 28px 0 0; padding: 24px 20px 40px; }
+.tf-sheet-inner h4 { font-size: 17px; font-weight: 700; margin-bottom: 16px; }
+.tf-sheet-inner input { width: 100%; height: 52px; border: none; background: #f5f5f5; border-radius: 16px; padding: 0 16px; font-size: 22px; font-weight: 700; outline: none; font-family: inherit; }
+.tf-pop-amt { font-size: 34px; font-weight: 700; text-align: center; margin-bottom: 24px; letter-spacing: -1px; }
+.tf-input { width: 100%; height: 44px; border: 1px solid #e6e6e6; border-radius: 14px; background: #f4f4f4; padding: 0 14px; font-size: 15px; outline: none; font-family: inherit; margin-top: 4px; }
+/* ===== 抉择卡片 ===== */
+.choice-card { background:#f4f2ee; border-radius:18px; padding:14px 14px 10px; min-width:210px; max-width:240px; }
+.cc-title { font-size:15px; font-weight:700; color:#111; margin-bottom:8px; }
+.cc-q { font-size:14px; line-height:1.45; color:#333; margin-bottom:12px; word-break:break-word; }
+.cc-opts { display:flex; flex-direction:column; gap:8px; }
+.cc-opt { width:100%; border:none; border-radius:22px; padding:11px 16px; font-size:14px; background:#fff; color:#333; cursor:pointer; font-family:inherit; text-align:left; }
+.cc-opt.picked { background:#7a7a7a; color:#fff; }
+.cc-opt.dim { opacity:.45; cursor:default; }
+.cc-foot { font-size:11px; color:#aaa; text-align:right; margin-top:10px; }
+
+/* 抉择输入框 */
+.tf-sheet-inner textarea { width:100%; height:110px; border:none; background:#f5f5f5; border-radius:16px; padding:12px 14px; font-size:15px; font-family:inherit; outline:none; resize:none; margin-top:10px; }
+/* 抉择卡片底色改为超浅灰 */
+.choice-card { background: #efefef; box-shadow: 0 2px 8px rgba(0,0,0,.05); }
+.cc-opt { background: #fff; box-shadow: 0 1px 3px rgba(0,0,0,.05); }
+.cc-opt.picked { background: #7a7a7a; color: #fff; box-shadow: none; }
+.cc-foot { color: #999; }
+/* 转账卡片：去掉英文，图标右下角加灰色小字 */
+.tf-icon { position: relative; width: 24px; height: 24px; }
+.tf-icon em {
+  position: absolute;
+  right: -9px;
+  bottom: -7px;
+  font-size: 8px;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: .2px;
+  color: #9a9a9a;
+  white-space: nowrap;
+}
+.row.me .transfer .tf-icon em { color: #cfcfcf; }
+/* 转账小字位置修正 */
+.transfer { gap: 16px; }
+.tf-icon {
+  position: relative;
+  width: 26px;
+  height: 26px;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+.tf-icon em {
+  position: absolute;
+  right: -7px;
+  bottom: -3px;
+  font-size: 8px;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: .3px;
+  color: #aaa;
+  white-space: nowrap;
+}
+.row.me .transfer .tf-icon em { color: #ccc; }
+/* 转账小字放到卡片右下角 */
+.transfer { position: relative; }
+.transfer .tf-tag {
+  position: absolute;
+  right: 14px;
+  bottom: 10px;
+  font-size: 10px;
+  font-style: normal;
+  line-height: 1;
+  letter-spacing: .5px;
+  color: #9a9a9a;
+  white-space: nowrap;
+}
+.row.me .transfer .tf-tag { color: rgba(255,255,255,.5); }
+.transfer .tf-tag {
+  right: 8px;
+  bottom: 9px;
+}
 
 
