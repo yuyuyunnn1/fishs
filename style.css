@@ -356,6 +356,10 @@ button { color: inherit; -webkit-appearance: none; appearance: none; font-family
 .cl-io { flex: 1 1 auto; justify-content: flex-end; flex-wrap: nowrap; gap: 6px; }
 .cl-io button { height: 34px; padding: 0 10px; font-size: 12px; white-space: nowrap; }
 .cl-new { height: 34px; padding: 0 12px; font-size: 12px; white-space: nowrap; }
+/* 分组小叉 */
+.cl-ftag { display: inline-flex; align-items: center; gap: 6px; }
+.g-x { display: inline-grid; place-items: center; width: 18px; height: 18px; border-radius: 50%; background: rgba(0,0,0,.08); font-size: 14px; line-height: 1; color: #888; }
+.cl-ftag.on .g-x { background: rgba(255,255,255,.25); color: #fff; }
 
 
 

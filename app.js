@@ -136,8 +136,10 @@ function renderCardsPage() {
 function renderFilterChips() {
   const all = ['全部', ...groupList];
   $('filterChips').innerHTML = all.map(g => {
-    const longpress = (g === '全部' || g === '未分组') ? '' : `oncontextmenu="delGroup('${g}');return false;" ontouchstart="startHold('${g}')" ontouchend="clearHold()"`;
-    return `<button class="cl-ftag ${g === filterGroup ? 'on' : ''}" onclick="setFilter('${g}')" ${longpress}>${g}</button>`;
+    const on = g === filterGroup ? 'on' : '';
+    const canDel = g !== '全部' && g !== '未分组';
+    const x = canDel ? `<span class="g-x" onclick="event.stopPropagation();delGroup('${g}')">×</span>` : '';
+    return `<button class="cl-ftag ${on}" onclick="setFilter('${g}')">${g}${x}</button>`;
   }).join('') + `<button class="cl-ftag" onclick="addGroup()">＋ 新建分组</button>`;
 }
 window.setFilter = g => { filterGroup = g; renderFilterChips(); renderCards(); renderStat(); };
