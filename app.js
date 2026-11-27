@@ -556,3 +556,30 @@ window.delGroup = g => {
   renderCardsPage();
   showToast(`「${g}」已删除，字卡移至未分组`);
 };
+// ── 聊天背景 ──────────────────────────────────────────────
+const BG_KEY = 'home_chatBg';
+
+function applyChatBg() {
+  const bg = ls.get(BG_KEY);
+  if (bg) $('msgs').style.backgroundImage = `url("${bg}")`;
+  else $('msgs').style.backgroundImage = '';
+}
+applyChatBg();
+
+$('changeChatBg').addEventListener('click', () => {
+  $('chatMenu').classList.remove('show');
+  const inp = document.createElement('input');
+  inp.type = 'file'; inp.accept = 'image/*';
+  inp.onchange = e => {
+    const file = e.target.files[0];
+    if (!file) return;
+    const reader = new FileReader();
+    reader.onload = ev => {
+      ls.set(BG_KEY, ev.target.result);
+      applyChatBg();
+      showToast('背景已更换');
+    };
+    reader.readAsDataURL(file);
+  };
+  inp.click();
+});
