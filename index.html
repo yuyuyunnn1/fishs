@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Home</title>
+<link rel="stylesheet" href="style.css">
+</head>
+<body>
+<div class="phone" id="phone">
+
+  <div class="status"></div>
+
+  <!-- 资料卡 -->
+  <div class="card profile">
+    <div class="banner pickable" data-img="banner"></div>
+    <div class="avatar pickable" data-img="avatar"></div>
+    <div class="name" id="nameEl" contenteditable="true" data-placeholder="昵称">喻</div>
+    <div class="bio" id="bioEl" contenteditable="true" data-placeholder="签名">I'm the only one still thinking of you. ✎</div>
+    <div class="meta">
+      <div class="chip">🎧 <div class="wave"><i></i><i></i><i></i><i></i><i></i></div> 听歌中</div>
+      <div class="chip">📍 未知</div>
+    </div>
+  </div>
+
+  <!-- 时间组件 -->
+  <div class="card clock">
+    <div class="clock-top">
+      <div>
+        <div class="time"><span id="time">07:14:50</span><small id="ampm">PM</small></div>
+        <div class="date" id="date">2026/10/23</div>
+      </div>
+      <div class="day">
+        <div class="hearts">🖤🩶🤍</div>
+        <div class="date" id="weekday">Friday</div>
+      </div>
+    </div>
+    <div class="week" id="week">
+      <span>日</span><span>一</span><span>二</span><span>三</span><span>四</span><span>五</span><span>六</span>
+    </div>
+  </div>
+
+  <!-- 拍立得 + 应用 -->
+  <div class="mid">
+    <div class="polaroid">
+      <div class="clip"></div>
+      <div class="pic pickable" data-img="polaroid"></div>
+      <p>I miss you</p>
+    </div>
+    <div class="apps">
+      <div class="app" id="openChat">
+        <div class="icon dark">
+          <svg viewBox="0 0 24 24" fill="#fff"><path d="M9 3C5 3 2 5.7 2 9c0 1.9 1 3.6 2.6 4.7L4 16l2.7-1.4c.7.2 1.5.3 2.3.3h.4A5.5 5.5 0 0115 9c.3 0 .6 0 .9.1C15.4 5.6 12.5 3 9 3zm6 7c-3 0-5.5 2-5.5 4.5S12 19 15 19c.6 0 1.2-.1 1.8-.3L19 20l-.5-1.9c1.5-.8 2.5-2.1 2.5-3.6C21 12 18.5 10 15 10z"/></svg>
+        </div>WeChat
+      </div>
+      <div class="app">
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="1.6"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6.5 6.5-6.5s6.5 2.9 6.5 6.5"/><path d="M15.5 4.6a3.5 3.5 0 010 6.8M18 13.8c2 .9 3.5 3.3 3.5 6.2"/></svg></div>朋友圈
+      </div>
+      <div class="app">
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="1.6"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M3.5 7l8.5 6 8.5-6"/></svg></div>信箱
+      </div>
+      <div class="app">
+        <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="1.6"><path d="M9 18V5l11-2v13"/><circle cx="6" cy="18" r="3"/><circle cx="17" cy="16" r="3"/></svg></div>网易云
+      </div>
+    </div>
+  </div>
+
+  <!-- 音乐胶囊 -->
+  <div class="player">
+    <div class="p-cover pickable" id="cover" data-img="cover"></div>
+    <div class="p-info"><b>YOU MAKE ME SAD</b><span>LOVELY BOMB</span></div>
+    <button class="p-btn" id="playBtn">
+      <svg id="playIcon" width="18" height="18" viewBox="0 0 24 24" fill="#fff"><path d="M7 4l13 8-13 8z"/></svg>
+    </button>
+    <button class="p-btn heart" id="heartBtn">
+      <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="2"><path d="M12 21s-8-5-8-11a4.5 4.5 0 018-2.8A4.5 4.5 0 0120 10c0 6-8 11-8 11z"/></svg>
+    </button>
+  </div>
+
+  <div class="dots"><i class="on"></i><i></i></div>
+
+  <!-- Dock -->
+  <div class="dock">
+    <div class="dicon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="1.6"><rect x="5" y="2" width="14" height="20" rx="3"/><rect x="8" y="18" width="8" height="2" rx="1" fill="#333" stroke="none"/></svg>
+    </div>
+    <div class="dicon" id="openCards">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="1.6"><rect x="3" y="3" width="18" height="18" rx="4"/><path d="M7 8h10M7 12h10M7 16h6"/></svg>
+    </div>
+    <div class="dicon" id="openSet">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="1.6"><circle cx="12" cy="12" r="4"/><path d="M12 2v2M12 20v2M2 12h2M20 12h2M4.93 4.93l1.41 1.41M17.66 17.66l1.41 1.41M4.93 19.07l1.41-1.41M17.66 6.34l1.41-1.41"/></svg>
+    </div>
+  </div>
+
+  <!-- ===== 微信聊天页 ===== -->
+  <div class="page" id="chatPage">
+    <div class="c-head">
+      <button class="c-btn" data-close="chatPage">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2.2"><path d="M15 5l-7 7 7 7"/></svg>
+      </button>
+      <div class="c-ava" id="peerAva"></div>
+      <div class="c-title">
+        <b id="peerName">Mr.Left</b>
+        <span id="peerState">ONLINE</span>
+      </div>
+      <button class="c-btn">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+      </button>
+      <button class="c-btn" id="moreBtn">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="#999"><circle cx="5" cy="12" r="2"/><circle cx="12" cy="12" r="2"/><circle cx="19" cy="12" r="2"/></svg>
+      </button>
+      <div class="menu" id="chatMenu">
+        <div id="changePeerAva">更换对方头像</div>
+        <div id="changePeerName">更改对方名称</div>
+        <div id="clearChat" style="color:#e55">清空聊天记录</div>
+      </div>
+    </div>
+    <div class="msgs" id="msgs"></div>
+    <div class="c-bar">
+      <button class="plus">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="#555" stroke-width="2"><path d="M12 5v14M5 12h14"/></svg>
+      </button>
+      <div class="c-input">
+        <input id="msgInput" type="text" placeholder="输入消息...">
+      </div>
+      <button class="send" id="sendBtn">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2"><path d="M22 2L11 13"/><path d="M22 2L15 22l-4-9-9-4 20-7z"/></svg>
+      </button>
+    </div>
+  </div>
+
+  <!-- ===== 字卡库页 ===== -->
+  <div class="page" id="cardsPage" style="background:#f7f7f7">
+    <div class="cl-head">
+      <div class="cl-top">
+        <div class="cl-title">字卡库</div>
+        <div class="cl-io">
+          <button id="importBtn">↓ 导入</button>
+          <button id="exportBtn">↑ 导出</button>
+          <button id="delAllBtn" style="color:#444">🗑 全删</button>
+        </div>
+        <button class="cl-new" id="newCardBtn">↓ 新增</button>
+      </div>
+    </div>
+    <div class="cl-search">
+      <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="#aaa" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
+      <input id="searchInput" placeholder="搜索字卡...">
+    </div>
+    <div class="cl-filter" id="filterChips"></div>
+    <div class="cl-list" id="cardList"></div>
+    <div class="cl-stat" id="cardStat"></div>
+
+    <!-- 新增/编辑弹层 -->
+    <div class="modal-bg" id="modalBg">
+      <div class="modal">
+        <h4 id="modalTitle">新增字卡</h4>
+        <textarea id="modalInput" placeholder="每行一条，可批量添加"></textarea>
+        <div class="modal-g" id="modalGroups"></div>
+        <div class="modal-row">
+          <button class="modal-cancel" id="modalCancel">取消</button>
+          <button class="modal-ok" id="modalOk">确定</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== 设置页 ===== -->
+  <div class="page" id="setPage">
+    <div class="p-head">
+      <button class="back" data-close="setPage">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2.2"><path d="M15 5l-7 7 7 7"/></svg>
+      </button>
+      <h3>设置</h3>
+    </div>
+    <div class="p-body">
+      <div class="set-card">
+        <h4>聊天设置</h4>
+        <div class="set-sub">对方回复数：</div>
+        <div class="num-row">
+          <input type="number" id="cntMin" min="1" max="10" value="1">
+          <span>~</span>
+          <input type="number" id="cntMax" min="1" max="10" value="3">
+          <span>条</span>
+        </div>
+        <div class="sl-wrap">
+          <div class="sl-row"><span>最短等待</span><b id="waitMinVal">4s</b></div>
+          <input type="range" id="waitMin" min="1" max="120" value="4">
+        </div>
+        <div class="sl-wrap">
+          <div class="sl-row"><span>最长等待</span><b id="waitMaxVal">20s</b></div>
+          <input type="range" id="waitMax" min="1" max="120" value="20">
+        </div>
+        <div class="sl-wrap">
+          <div class="prob-row"><span>表情包概率</span><b id="emojiProbVal">50%</b></div>
+          <input type="range" id="emojiProb" min="0" max="100" step="10" value="50">
+          <div class="prob-tip">0% 只发字卡，100% 只发表情包，50% 各一半</div>
+        </div>
+              <div class="sl-wrap" style="border-top:1px solid #e8e8e8;padding-top:16px;margin-top:16px">
+          <button class="del-all-btn" id="resetBtn">恢复出厂设置</button>
+        </div>
+      </div>
+    </div>
+  </div>
+  <!-- 隐藏文件选择 -->
+  <input type="file" id="filePicker" accept="image/*" style="display:none">
+  <input type="file" id="importPicker" accept=".json,.txt" style="display:none">
+  <div class="toast" id="toast"></div>
+
+</div>
+<script src="app.js"></script>
+</body>
+</html>
