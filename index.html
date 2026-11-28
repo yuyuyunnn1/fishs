@@ -4,13 +4,13 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Home</title>
-<link rel="stylesheet" href="style.css"></head>
+<link rel="stylesheet" href="style.css">
+</head>
 <body>
 <div class="phone" id="phone">
 
   <div class="status"></div>
 
-  <!-- 消息通知横幅 -->
   <div class="nb-banner" id="nbBanner">
     <div class="nb-ava" id="nbAva"></div>
     <div class="nb-content">
@@ -22,7 +22,6 @@
     </div>
   </div>
 
-  <!-- 资料卡 -->
   <div class="card profile">
     <div class="banner pickable" data-img="banner"></div>
     <div class="avatar pickable" data-img="avatar"></div>
@@ -34,13 +33,11 @@
     </div>
   </div>
 
-   <!-- 时间组件 -->
   <div class="card clock">
     <div class="clock-top">
       <div>
-        <div class="time"><span id="time">07:14:50</span><small id="ampm">PM</small></div>
+        <div class="time"><span id="time">07:14</span></div>
       </div>
-
       <div class="day">
         <div class="date" id="weekday" style="font-size:16px;font-weight:600;color:var(--ink);margin-top:0">Friday</div>
       </div>
@@ -56,12 +53,15 @@
     </div>
   </div>
 
-  <!-- 拍立得 + 应用 -->
   <div class="mid">
-    <div class="polaroid">
-      <div class="clip"></div>
-      <div class="pic pickable" data-img="polaroid"></div>
-      <p>I miss you</p>
+    <div class="talk-card">
+      <div class="talk-inner">
+        <div class="talk-bub tb-l"></div>
+        <div class="talk-bub tb-r"></div>
+        <div class="talk-cir tc-l pickable" data-img="talkL"></div>
+        <div class="talk-cir tc-r pickable" data-img="talkR"></div>
+      </div>
+      <div class="talk-desc">相距<span id="distEl" contenteditable="true" style="outline:none;cursor:text">2836.03</span>公里，一起聊天<span id="dayCount">0</span>天</div>
     </div>
     <div class="apps">
       <div class="app" id="openChat">
@@ -84,7 +84,6 @@ WeChat
     </div>
   </div>
 
-  <!-- 音乐胶囊 -->
   <div class="player" style="background:linear-gradient(135deg,#f5f5f5 0%,#fff 100%);color:#111;box-shadow:0 8px 20px rgba(0,0,0,.12)">
     <div class="p-cover pickable" id="cover" data-img="cover"></div>
     <div class="p-info"><b>YOU MAKE ME SAD</b><span>LOVELY BOMB</span></div>
@@ -97,7 +96,6 @@ WeChat
   </div>
   <div class="dots"><i class="on"></i><i></i></div>
 
-  <!-- Dock -->
   <div class="dock">
     <div class="dicon">
       <svg viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="1.6"><path d="M3 12l9-9 9 9M5 10v10a2 2 0 002 2h10a2 2 0 002-2v-10"/><rect x="9" y="13" width="6" height="6"/></svg>
@@ -107,7 +105,8 @@ WeChat
     </div>
     <div class="dicon" id="openSet">
       <svg viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="1.6"><circle cx="12" cy="12" r="3"/><circle cx="12" cy="12" r="8"/><path d="M12 2v4m0 12v4M22 12h-4M4 12H0M19.07 4.93l-2.83 2.83M7.76 16.24l-2.83 2.83M19.07 19.07l-2.83-2.83M7.76 7.76L4.93 4.93"/></svg>
-    </div>  </div>
+    </div>
+  </div>
 
   <!-- ===== 微信聊天页 ===== -->
   <div class="page" id="chatPage">
@@ -120,7 +119,7 @@ WeChat
         <b id="peerName">Mr.Left</b>
         <span id="peerState">ONLINE</span>
       </div>
-      <button class="c-btn">
+      <button class="c-btn" id="searchChatBtn">
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#999" stroke-width="2"><circle cx="11" cy="11" r="7"/><path d="M20 20l-4-4"/></svg>
       </button>
       <button class="c-btn" id="moreBtn">
@@ -132,55 +131,48 @@ WeChat
         <div id="changeChatBg">更换聊天背景</div>
         <div id="clearChat" style="color:#e55">清空聊天记录</div>
       </div>
-       <!-- 对方来电 -->
-    <div class="call-banner" id="callBanner">
-      <div class="call-ava" id="callAva"></div>
-      <div class="call-info">
-        <div class="call-name" id="callName">Mr.Left</div>
-        <div class="call-sub">正在来电</div>
+      <div class="call-banner" id="callBanner">
+        <div class="call-ava" id="callAva"></div>
+        <div class="call-info">
+          <div class="call-name" id="callName">Mr.Left</div>
+          <div class="call-sub">正在来电</div>
+        </div>
+        <div style="flex:1"></div>
+        <button class="call-btn call-reject" id="callReject">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><path d="M12 9c-1.6 0-3.1.3-4.5.8v3.1c0 .4-.2.8-.6 1-1 .5-1.9 1.2-2.7 2-.2.2-.5.3-.7.3-.3 0-.5-.1-.7-.3L.5 13.6c-.2-.2-.3-.4-.3-.7 0-.3.1-.5.3-.7C3.4 9.5 7.5 7.5 12 7.5s8.6 2 11.5 4.7c.2.2.3.4.3.7 0 .3-.1.5-.3.7l-2.3 2.3c-.2.2-.4.3-.7.3-.3 0-.5-.1-.7-.3-.8-.8-1.7-1.5-2.7-2-.3-.2-.6-.6-.6-1V9.8C15.1 9.3 13.6 9 12 9z"/></svg>
+        </button>
+        <button class="call-btn call-accept" id="callAccept">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C9.6 21 3 14.4 3 6c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1l-2.3 2.2z"/></svg>
+        </button>
       </div>
-      <div style="flex:1"></div>
-      <button class="call-btn call-reject" id="callReject">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><path d="M12 9c-1.6 0-3.1.3-4.5.8v3.1c0 .4-.2.8-.6 1-1 .5-1.9 1.2-2.7 2-.2.2-.5.3-.7.3-.3 0-.5-.1-.7-.3L.5 13.6c-.2-.2-.3-.4-.3-.7 0-.3.1-.5.3-.7C3.4 9.5 7.5 7.5 12 7.5s8.6 2 11.5 4.7c.2.2.3.4.3.7 0 .3-.1.5-.3.7l-2.3 2.3c-.2.2-.4.3-.7.3-.3 0-.5-.1-.7-.3-.8-.8-1.7-1.5-2.7-2-.3-.2-.6-.6-.6-1V9.8C15.1 9.3 13.6 9 12 9z"/></svg>
-      </button>
-      <button class="call-btn call-accept" id="callAccept">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C9.6 21 3 14.4 3 6c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1l-2.3 2.2z"/></svg>
-      </button>
-    </div>
-
-    <!-- 通话中浮窗 -->
-    <div class="call-float" id="callFloat">
-      <div class="call-ava" id="callFloatAva"></div>
-      <div class="call-info">
-        <div class="call-name" id="callFloatName">Mr.Left</div>
+      <div class="call-float" id="callFloat">
+        <div class="call-ava" id="callFloatAva"></div>
+        <div class="call-info">
+          <div class="call-name" id="callFloatName">Mr.Left</div>
+        </div>
+        <div id="callTimer" style="font-size:12px;color:#aaa;flex-shrink:0">00:00</div>
+        <button class="call-btn call-hang" id="callEnd">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="#fff"><path d="M12 9c-1.6 0-3.1.3-4.5.8v3.1c0 .4-.2.8-.6 1-1 .5-1.9 1.2-2.7 2-.2.2-.5.3-.7.3-.3 0-.5-.1-.7-.3L.5 13.6c-.2-.2-.3-.4-.3-.7 0-.3.1-.5.3-.7C3.4 9.5 7.5 7.5 12 7.5s8.6 2 11.5 4.7c.2.2.3.4.3.7 0 .3-.1.5-.3.7l-2.3 2.3c-.2.2-.4.3-.7.3-.3 0-.5-.1-.7-.3-.8-.8-1.7-1.5-2.7-2-.3-.2-.6-.6-.6-1V9.8C15.1 9.3 13.6 9 12 9z"/></svg>
+        </button>
       </div>
-      <div id="callTimer" style="font-size:12px;color:#aaa;flex-shrink:0">00:00</div>
-      <button class="call-btn call-hang" id="callEnd">
-        <svg width="22" height="22" viewBox="0 0 24 24" fill="#fff">
-          <path d="M12 9c-1.6 0-3.1.3-4.5.8v3.1c0 .4-.2.8-.6 1-1 .5-1.9 1.2-2.7 2-.2.2-.5.3-.7.3-.3 0-.5-.1-.7-.3L.5 13.6c-.2-.2-.3-.4-.3-.7 0-.3.1-.5.3-.7C3.4 9.5 7.5 7.5 12 7.5s8.6 2 11.5 4.7c.2.2.3.4.3.7 0 .3-.1.5-.3.7l-2.3 2.3c-.2.2-.4.3-.7.3-.3 0-.5-.1-.7-.3-.8-.8-1.7-1.5-2.7-2-.3-.2-.6-.6-.6-1V9.8C15.1 9.3 13.6 9 12 9z"/>
-        </svg>
-      </button>
-    </div>
-    <!-- 拨出横幅 -->
-    <div class="call-banner" id="dialBanner">
-      <div class="call-ava" id="dialAva"></div>
-      <div class="call-info">
-        <div class="call-name" id="dialName">Mr.Left</div>
-        <div class="call-sub">正在拨出...</div>
+      <div class="call-banner" id="dialBanner">
+        <div class="call-ava" id="dialAva"></div>
+        <div class="call-info">
+          <div class="call-name" id="dialName">Mr.Left</div>
+          <div class="call-sub">正在拨出...</div>
+        </div>
+        <div style="flex:1"></div>
+        <button class="call-btn call-reject" id="dialCancel">
+          <svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C9.6 21 3 14.4 3 6c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1l-2.3 2.2z"/></svg>
+        </button>
       </div>
-      <div style="flex:1"></div>
-      <button class="call-btn call-reject" id="dialCancel">
-        <svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C9.6 21 3 14.4 3 6c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1l-2.3 2.2z"/></svg>
-      </button>
     </div>
- </div>
-    <!-- 引用预览条 -->
+    <!-- 通话浮窗移到 c-head 外面 -->
     <div class="quote-bar" id="quoteBar" style="display:none">
       <div class="quote-preview" id="quotePreview"></div>
       <button class="quote-cancel" id="quoteCancelBtn">×</button>
     </div>
     <div class="msgs" id="msgs"></div>
-    <!-- 十字按钮面板 -->
     <div class="plus-panel" id="plusPanel">
       <div class="pp-grid">
         <div class="pp-item" data-act="call">
@@ -220,7 +212,6 @@ WeChat
         <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2"><path d="M22 2L11 13"/><path d="M22 2L15 22l-4-9-9-4 20-7z"/></svg>
       </button>
     </div>
-    <!-- 表情库弹层 -->
     <div class="emoji-bg" id="emojiBg">
       <div class="emoji-modal">
         <div class="emoji-top">
@@ -233,11 +224,10 @@ WeChat
         </div>
       </div>
     </div>
-    <!-- 消息长按菜单 -->
     <div class="msg-menu" id="msgMenu">
       <div id="msgMenuQuote">引用</div>
       <div id="msgMenuDel" style="color:#e55">删除</div>
-    </div>    <!-- 转账金额输入 -->
+    </div>
     <div class="tf-sheet" id="tfSheet">
       <div class="tf-sheet-inner">
         <h4>转账金额</h4>
@@ -248,7 +238,6 @@ WeChat
         </div>
       </div>
     </div>
-    <!-- 转账详情 -->
     <div class="tf-pop" id="tfPop">
       <div class="tf-pop-inner">
         <div class="tf-pop-amt" id="tfPopAmt">¥0.00</div>
@@ -257,8 +246,7 @@ WeChat
           <button class="modal-ok" id="tfAccept">接收</button>
         </div>
       </div>
-    </div>   
-     <!-- 抉择输入弹层 -->
+    </div>
     <div class="tf-sheet" id="chSheet">
       <div class="tf-sheet-inner">
         <h4>创建抉择</h4>
@@ -271,21 +259,36 @@ WeChat
       </div>
     </div>
 
-  </div>
-     <!-- 拍一拍弹层 -->
-    <div class="tf-sheet" id="patSheet">
-      <div class="tf-sheet-inner">
-        <h4>拍一拍</h4>
-        <div class="pat-list" id="patList"></div>
-        <div style="display:flex;gap:10px;margin-top:14px">
-          <input type="text" id="patInput" placeholder="输入新动作" style="flex:1;border:none;background:#f5f5f5;border-radius:16px;padding:0 14px;font-size:14px;outline:none;height:44px;font-family:inherit">
-          <button id="patAddBtn" style="border:none;background:#111;color:#fff;border-radius:16px;padding:0 16px;font-size:14px;cursor:pointer;font-family:inherit;white-space:nowrap">添加</button>
-        </div>
-        <div style="text-align:center;margin-top:12px">
-          <button style="border:none;background:#f0f0f0;border-radius:16px;padding:8px 16px;font-size:13px;color:#666;cursor:pointer;font-family:inherit" onclick="$('patSheet').classList.remove('show')">完成</button>
-        </div>
+    <!-- 聊天搜索弹层 -->
+    <div class="search-modal" id="searchModal">
+      <div class="search-top">
+        <button id="searchBackBtn">
+          <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="2.2"><path d="M15 5l-7 7 7 7"/></svg>
+        </button>
+        <input type="text" id="searchChatInput" placeholder="搜索聊天记录...">
+        <button id="searchCloseBtn">✕</button>
+      </div>
+      <div class="search-results" id="searchResultList">
+        <div class="search-empty">输入关键词搜索聊天记录</div>
       </div>
     </div>
+
+  </div>
+
+  <div class="tf-sheet" id="patSheet">
+    <div class="tf-sheet-inner">
+      <h4>拍一拍</h4>
+      <div class="pat-list" id="patList"></div>
+      <div style="display:flex;gap:10px;margin-top:14px">
+        <input type="text" id="patInput" placeholder="输入新动作" style="flex:1;border:none;background:#f5f5f5;border-radius:16px;padding:0 14px;font-size:14px;outline:none;height:44px;font-family:inherit">
+        <button id="patAddBtn" style="border:none;background:#111;color:#fff;border-radius:16px;padding:0 16px;font-size:14px;cursor:pointer;font-family:inherit;white-space:nowrap">添加</button>
+      </div>
+      <div style="text-align:center;margin-top:12px">
+        <button style="border:none;background:#f0f0f0;border-radius:16px;padding:8px 16px;font-size:13px;color:#666;cursor:pointer;font-family:inherit" onclick="$('patSheet').classList.remove('show')">完成</button>
+      </div>
+    </div>
+  </div>
+
   <!-- ===== 字卡库页 ===== -->
   <div class="page" id="cardsPage" style="background:#f7f7f7">
     <div class="cl-head">
@@ -354,24 +357,36 @@ WeChat
           <div class="prob-row"><span>对方引用概率</span><b id="quoteProbVal">30%</b></div>
           <input type="range" id="quoteProb" min="0" max="100" step="1" value="30">
           <div class="prob-tip">对方回复时有此概率引用你最近一条消息</div>
-        </div>        <div class="sl-wrap">
+        </div>
+        <div class="sl-wrap">
           <div class="prob-row"><span>对方转账概率</span><b id="peerTfProbVal">20%</b></div>
           <input type="range" id="peerTfProb" min="0" max="100" step="1" value="20">
           <div class="prob-tip">对方回复时有此概率给你转账</div>
-        </div>        <div class="sl-wrap">
+        </div>
+        <div class="sl-wrap">
           <div class="prob-row"><span>对方拍一拍概率</span><b id="patProbVal">30%</b></div>
           <input type="range" id="patProb" min="0" max="100" step="1" value="30">
           <div class="prob-tip">你拍对方后有此概率对方拍回</div>
-        </div>        <div class="sl-wrap">
+        </div>
+        <div class="sl-wrap">
           <div class="prob-row"><span>对方来电概率</span><b id="callProbVal">10%</b></div>
           <input type="range" id="callProb" min="0" max="100" step="1" value="10">
           <div class="prob-tip">每次对方回复时有此概率触发来电</div>
-        </div>         <div class="sl-wrap">
+        </div>
+        <div class="sl-wrap">
           <div class="prob-row"><span>对方接听概率</span><b id="callAnswerProbVal">60%</b></div>
           <input type="range" id="callAnswerProb" min="0" max="100" step="1" value="60">
           <div class="prob-tip">你打给对方时有此概率对方接听</div>
         </div>
-        <div class="sl-wrap">
+      </div>
+      <div class="set-card" style="margin-top:14px">
+        <h4>纪念日期</h4>
+        <div class="set-sub">选择开始相识的日期</div>
+        <input type="date" id="anniversaryDate" style="width:100%;height:48px;border:1px solid #e6e6e6;border-radius:12px;background:#f4f4f4;padding:0 12px;font-size:16px;outline:none;font-family:inherit;margin-top:12px">
+        <div class="prob-tip" style="margin-top:8px">页面会自动计算已相识的天数</div>
+      </div>
+      <div class="set-card" style="margin-top:14px">
+        <div class="sl-wrap" style="margin-bottom:0">
           <div class="sl-row"><span>对方转账金额</span></div>
           <input type="text" id="peerTfAmts" class="tf-input" placeholder="如：5.20, 13.14, 52">
           <div class="prob-tip">可填多个，用逗号分隔，每次随机选一个</div>

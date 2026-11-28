@@ -3,6 +3,7 @@ const KEY = {
   cards:'home_cards2', groups:'home_groups2',
   replyGroup:'home_replyGroup',
   peerName:'home_peerName', msgs:'home_msgs',
+  anniversary:'home_anniversary', distEl:'home_distEl',
 };
 const EMOJI_KEY = 'home_emojis';
 const BG_KEY = 'home_chatBg';
@@ -30,9 +31,7 @@ const esc = s => String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':
 
 function tick() {
   const d = new Date(), h = d.getHours();
-  const h12 = h % 12 || 12;
-  $('time').textContent = `${pad(h12)}:${pad(d.getMinutes())}:${pad(d.getSeconds())}`;
-  $('ampm').textContent = h >= 12 ? 'PM' : 'AM';
+  $('time').textContent = `${pad(h % 12 || 12)}:${pad(d.getMinutes())}`;
   $('weekday').textContent = days[d.getDay()];
   [...$('week').children].forEach((s,i) => {
     const dayNum = new Date(d.getFullYear(), d.getMonth(), d.getDate() - d.getDay() + i).getDate();
@@ -40,7 +39,24 @@ function tick() {
     s.classList.toggle('on', i === d.getDay());
   });
 }
-tick(); setInterval(tick, 1000);
+tick();
+setInterval(tick, 1000);
+
+function updateDayCount() {
+  const anniversaryStr = ls.get(KEY.anniversary);
+  if (!anniversaryStr) {
+    $('dayCount').textContent = '0';
+    return;
+  }
+  const anniversary = new Date(anniversaryStr);
+  const today = new Date();
+  today.setHours(0, 0, 0, 0);
+  anniversary.setHours(0, 0, 0, 0);
+  const daysDiff = Math.floor((today - anniversary) / (1000 * 60 * 60 * 24));
+  $('dayCount').textContent = Math.max(0, daysDiff);
+}
+updateDayCount();
+setInterval(updateDayCount, 60000);
 
 let currentImgTarget = null;
 const imgMap = JSON.parse(ls.get(KEY.imgs) || '{}');
@@ -49,12 +65,13 @@ function applyImgs() {
   const r = document.documentElement.style;
   if (imgMap.banner)   r.setProperty('--banner',   `url("${imgMap.banner}")`);
   if (imgMap.avatar)   r.setProperty('--avatar',   `url("${imgMap.avatar}")`);
-  if (imgMap.polaroid) r.setProperty('--polaroid', `url("${imgMap.polaroid}")`);
   if (imgMap.cover)    r.setProperty('--cover',    `url("${imgMap.cover}")`);
   if (imgMap.peer) {
     r.setProperty('--peer', `url("${imgMap.peer}")`);
     if ($('peerAva')) $('peerAva').style.backgroundImage = `url("${imgMap.peer}")`;
   }
+  if (imgMap.talkL) $('tc-l') && ($('tc-l').style.backgroundImage = `url("${imgMap.talkL}")`);
+  if (imgMap.talkR) $('tc-r') && ($('tc-r').style.backgroundImage = `url("${imgMap.talkR}")`);
 }
 applyImgs();
 
@@ -94,6 +111,10 @@ if (ls.get(KEY.name)) nameEl.textContent = ls.get(KEY.name);
 if (ls.get(KEY.bio))  bioEl.textContent  = ls.get(KEY.bio);
 nameEl.addEventListener('blur', () => ls.set(KEY.name, nameEl.textContent));
 bioEl .addEventListener('blur', () => ls.set(KEY.bio,  bioEl.textContent));
+
+const distEl = $('distEl');
+if (ls.get(KEY.distEl)) distEl.textContent = ls.get(KEY.distEl);
+distEl.addEventListener('blur', () => ls.set(KEY.distEl, distEl.textContent));
 
 let playing = false;
 $('playBtn').onclick = () => {
@@ -315,7 +336,7 @@ $('delAllBtn').addEventListener('click', () => {
 const cfg = Object.assign({
   cMin:1, cMax:3, wMin:4, wMax:20, prob:50,
   quoteProb:30, peerTfProb:20, peerTfAmts:'5.20,13.14,52',
-  patProb:30, callProb:10, callAnswerProb:60
+  patProb:30, callProb:10, callAnswerProb:60, peerInitMsgProb:30
 }, JSON.parse(ls.get('home_chatCfg')||'{}'));
 
 function saveCfg() { ls.set('home_chatCfg', JSON.stringify(cfg)); }
@@ -331,8 +352,20 @@ function syncCfgUI() {
   $('patProb').value = cfg.patProb; $('patProbVal').textContent = cfg.patProb+'%';
   $('callProb').value = cfg.callProb; $('callProbVal').textContent = cfg.callProb+'%';
   $('callAnswerProb').value = cfg.callAnswerProb; $('callAnswerProbVal').textContent = cfg.callAnswerProb+'%';
+  if ($('peerInitMsgProb')) { $('peerInitMsgProb').value = cfg.peerInitMsgProb; $('peerInitMsgProbVal').textContent = cfg.peerInitMsgProb+'%'; }
 }
 syncCfgUI();
+
+const anniversaryDateInput = $('anniversaryDate');
+if (ls.get(KEY.anniversary)) {
+  anniversaryDateInput.value = ls.get(KEY.anniversary);
+}
+anniversaryDateInput.addEventListener('change', e => {
+  if (e.target.value) {
+    ls.set(KEY.anniversary, e.target.value);
+    updateDayCount();
+  }
+});
 
 function onCount() {
   let a = clamp(parseInt($('cntMin').value)||1,1,10);
@@ -350,6 +383,7 @@ $('peerTfAmts').addEventListener('input', () => { cfg.peerTfAmts=$('peerTfAmts')
 $('patProb').addEventListener('input', () => { cfg.patProb=parseInt($('patProb').value); saveCfg(); syncCfgUI(); });
 $('callProb').addEventListener('input', () => { cfg.callProb=parseInt($('callProb').value); saveCfg(); syncCfgUI(); });
 $('callAnswerProb').addEventListener('input', () => { cfg.callAnswerProb=parseInt($('callAnswerProb').value); saveCfg(); syncCfgUI(); });
+if ($('peerInitMsgProb')) $('peerInitMsgProb').addEventListener('input', () => { cfg.peerInitMsgProb=parseInt($('peerInitMsgProb').value); saveCfg(); syncCfgUI(); });
 
 $('backupBtn').addEventListener('click', () => {
   const data = {};
@@ -402,6 +436,26 @@ let isTyping = false;
 let quoteMsg = null;
 
 function saveMsgs() { ls.set(KEY.msgs, JSON.stringify(msgList)); }
+
+function addTransfer(from, amount, status) {
+  const uid = 'tf-'+Date.now();
+  msgList.push({from, type:'transfer', amount, status, time:nowHM(), uid});
+  saveMsgs(); renderMsgs();
+  return uid;
+}
+
+function addMsg(from, text, emoji, quote) {
+  msgList.push({from, text:text||'', emoji:emoji||null, quote:quote||null, time:nowHM()});
+  saveMsgs(); renderMsgs();
+  if (from === 'peer' && !$('chatPage').classList.contains('open')) {
+    showNotificationBanner(getPeerName(), emoji ? '[图片]' : (text || ''), imgMap.peer || '', false);
+  }
+}
+
+function addPatMsg(from, text) {
+  msgList.push({from, text, pat:true, time:nowHM()});
+  saveMsgs(); renderMsgs();
+}
 
 function renderMsgs() {
   const box = $('msgs');
@@ -460,19 +514,6 @@ function renderMsgs() {
       </div>`;
   }).join('');
   box.scrollTop = box.scrollHeight;
-}
-
-function addMsg(from, text, emoji, quote) {
-  msgList.push({from, text:text||'', emoji:emoji||null, quote:quote||null, time:nowHM()});
-  saveMsgs(); renderMsgs();
-  if (from === 'peer' && !$('chatPage').classList.contains('open')) {
-    showNotificationBanner(getPeerName(), emoji ? '[图片]' : (text || ''), imgMap.peer || '', false);
-  }
-}
-
-function addPatMsg(from, text) {
-  msgList.push({from, text, pat:true, time:nowHM()});
-  saveMsgs(); renderMsgs();
 }
 
 let msgHoldTimer = null;
@@ -606,16 +647,6 @@ function peerReply() {
 }
 
 let tfOpenIdx = null;
-
-function addTransfer(from, amount, status) {
-  const m = { from, type:'transfer', amount, status: status||'pending', time: nowHM(), uid: Date.now()+'-'+Math.random() };
-  msgList.push(m);
-  saveMsgs(); renderMsgs();
-  if (from === 'peer' && !$('chatPage').classList.contains('open')) {
-    showNotificationBanner(getPeerName(), `转账 ¥${Number(amount).toFixed(2)}`, imgMap.peer || '', false);
-  }
-  return m.uid;
-}
 
 function setTransferStatus(uid, status) {
   const m = msgList.find(x => x.uid === uid);
@@ -860,7 +891,6 @@ let callFloatMini = false;
 function getPeerName() { return $('peerName') ? $('peerName').textContent : 'Mr.Left'; }
 function getPeerAva()  { return imgMap.peer ? `url("${imgMap.peer}")` : 'var(--peer)'; }
 
-// 确保浮窗挂在 body 下，不受页面切换影响
 function ensureCallFloatOnBody() {
   const f = $('callFloat');
   const b = $('callBanner');
@@ -913,7 +943,6 @@ function acceptCall() {
   $('callTimer').textContent = '00:00';
   const f = $('callFloat');
   f.classList.remove('mini');
-  // 重置位置到顶部居中
   f.style.left = '50%';
   f.style.right = 'auto';
   f.style.top = '16px';
@@ -942,7 +971,6 @@ $('callReject').addEventListener('click', () => rejectCall(false));
 $('callAccept').addEventListener('click', acceptCall);
 $('callEnd').addEventListener('click', endCall);
 
-// 点击头像缩小浮窗
 document.addEventListener('click', e => {
   if (callActive && $('callFloat').classList.contains('show')) {
     if (e.target.id === 'callFloatAva' || (e.target.closest && e.target.closest('#callFloatAva'))) {
@@ -1011,7 +1039,6 @@ $('dialCancel').addEventListener('click', () => {
   addCallMsg('me', '已取消通话');
 });
 
-// 仅缩小状态可拖动
 function makeDraggableMini(el) {
   let startX, startY, ox, oy, dragging = false;
   function onStart(e) {
@@ -1054,10 +1081,9 @@ function makeDraggableMini(el) {
   el.addEventListener('mousedown', onStart);
   el.addEventListener('touchstart', onStart, {passive:true});
 }
-// ===== 消息通知横幅 =====
+
 let nbTimer = null;
 let nbStartY = 0;
-let nbStartTime = 0;
 
 function showNotificationBanner(name, msg, avaUrl, isTest) {
   const banner = $('nbBanner');
@@ -1069,10 +1095,8 @@ function showNotificationBanner(name, msg, avaUrl, isTest) {
   nbTimer = setTimeout(() => banner.classList.remove('show'), 5000);
 }
 
-// 横幅上滑消失手势
 $('nbBanner').addEventListener('touchstart', e => {
   nbStartY = e.touches[0].clientY;
-  nbStartTime = Date.now();
 }, {passive: true});
 
 $('nbBanner').addEventListener('touchmove', e => {
@@ -1083,11 +1107,99 @@ $('nbBanner').addEventListener('touchmove', e => {
   }
 }, {passive: true});
 
-$('nbBanner').addEventListener('touchend', () => {
-  nbStartY = 0;
-  nbStartTime = 0;
-}, {passive: true});
-
 $('testBannerBtn').addEventListener('click', () => {
   showNotificationBanner(getPeerName(), '这是一条测试消息内容', imgMap.peer || '', true);
 });
+// ===== 气泡文字自定义 =====
+function applyBubTexts() {
+  const bubs = document.querySelectorAll('.talk-bub');
+  const tL = ls.get('home_bubL');
+  const tR = ls.get('home_bubR');
+  if (bubs[0]) {
+    bubs[0].textContent = tL || '';
+  }
+  if (bubs[1]) {
+    bubs[1].textContent = tR || '';
+  }
+}
+applyBubTexts();
+
+document.querySelectorAll('.talk-bub').forEach((bub, i) => {
+  let holdTimer = null;
+  bub.addEventListener('touchstart', () => {
+    holdTimer = setTimeout(() => {
+      const key = i === 0 ? 'home_bubL' : 'home_bubR';
+      const cur = ls.get(key) || '';
+      const val = prompt(i === 0 ? '编辑左侧气泡文字' : '编辑右侧气泡文字', cur);
+      if (val !== null) { ls.set(key, val.trim()); applyBubTexts(); }
+    }, 600);
+  }, {passive:true});
+  bub.addEventListener('touchend', () => clearTimeout(holdTimer));
+  bub.addEventListener('touchmove', () => clearTimeout(holdTimer));
+  // 桌面端点击编辑
+  bub.addEventListener('click', () => {
+    const key = i === 0 ? 'home_bubL' : 'home_bubR';
+    const cur = ls.get(key) || '';
+    const val = prompt(i === 0 ? '编辑左侧气泡文字' : '编辑右侧气泡文字', cur);
+    if (val !== null) { ls.set(key, val.trim()); applyBubTexts(); }
+  });
+});
+
+// ===== 聊天记录搜索 =====
+$('searchChatBtn').addEventListener('click', () => {
+  $('searchModal').classList.add('show');
+  $('searchResultList').innerHTML = '<div class="search-empty">输入关键词搜索聊天记录</div>';
+  $('searchChatInput').value = '';
+  setTimeout(() => $('searchChatInput').focus(), 300);
+});
+
+$('searchBackBtn').addEventListener('click', () => {
+  $('searchModal').classList.remove('show');
+});
+
+$('searchCloseBtn').addEventListener('click', () => {
+  $('searchChatInput').value = '';
+  $('searchResultList').innerHTML = '<div class="search-empty">输入关键词搜索聊天记录</div>';
+});
+
+$('searchChatInput').addEventListener('input', e => {
+  const kw = e.target.value.trim();
+  if (!kw) {
+    $('searchResultList').innerHTML = '<div class="search-empty">输入关键词搜索聊天记录</div>';
+    return;
+  }
+  const hits = msgList.map((m, idx) => ({...m, idx})).filter(m => m.text && m.text.includes(kw));
+  if (!hits.length) {
+    $('searchResultList').innerHTML = '<div class="search-empty">没有找到「' + esc(kw) + '」相关记录</div>';
+    return;
+  }
+  $('searchResultList').innerHTML = hits.map(m => `
+    <div class="search-item" onclick="jumpToMsg(${m.idx}, '${esc(kw)}')">
+      <div class="search-item-who">${m.from === 'me' ? '你' : getPeerName()}</div>
+      <div class="search-item-text">${m.text.replace(new RegExp(kw.replace(/[.*+?^${}()|[\]\\]/g,'\\$&'),'g'), `<span class="hl">${esc(kw)}</span>`)}</div>
+      <div class="search-item-time">${m.time}</div>
+    </div>
+  `).join('');
+});
+
+window.jumpToMsg = (idx, kw) => {
+  $('searchModal').classList.remove('show');
+  renderMsgs();
+  setTimeout(() => {
+    const rows = $('msgs').querySelectorAll('.row');
+    let rowIdx = 0;
+    msgList.forEach((m, i) => {
+      if (!m.pat && !m.call) {
+        if (i === idx) {
+          const el = rows[rowIdx];
+          if (el) {
+            el.scrollIntoView({behavior:'smooth', block:'center'});
+            el.classList.add('located');
+            setTimeout(() => el.classList.remove('located'), 2000);
+          }
+        }
+        rowIdx++;
+      }
+    });
+  }, 100);
+};
