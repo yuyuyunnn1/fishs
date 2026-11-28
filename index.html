@@ -4,12 +4,23 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>Home</title>
-<link rel="stylesheet" href="style.css">
-</head>
+<link rel="stylesheet" href="style.css"></head>
 <body>
 <div class="phone" id="phone">
 
   <div class="status"></div>
+
+  <!-- 消息通知横幅 -->
+  <div class="nb-banner" id="nbBanner">
+    <div class="nb-ava" id="nbAva"></div>
+    <div class="nb-content">
+      <div class="nb-name" id="nbName">Mr.Left</div>
+      <div class="nb-msg" id="nbMsg"></div>
+    </div>
+    <div class="nb-icon">
+      <svg viewBox="0 0 24 24" fill="none" stroke="#bbb" stroke-width="1.6"><rect x="3" y="5" width="18" height="14" rx="3"/><path d="M3.5 7l8.5 6 8.5-6"/></svg>
+    </div>
+  </div>
 
   <!-- 资料卡 -->
   <div class="card profile">
@@ -55,8 +66,11 @@
     <div class="apps">
       <div class="app" id="openChat">
         <div class="icon dark">
-          <svg viewBox="0 0 24 24" fill="#fff"><path d="M9 3C5 3 2 5.7 2 9c0 1.9 1 3.6 2.6 4.7L4 16l2.7-1.4c.7.2 1.5.3 2.3.3h.4A5.5 5.5 0 0115 9c.3 0 .6 0 .9.1C15.4 5.6 12.5 3 9 3zm6 7c-3 0-5.5 2-5.5 4.5S12 19 15 19c.6 0 1.2-.1 1.8-.3L19 20l-.5-1.9c1.5-.8 2.5-2.1 2.5-3.6C21 12 18.5 10 15 10z"/></svg>
-        </div>WeChat
+          <svg viewBox="0 0 24 24" fill="none" stroke="#fff" stroke-width="1.6" stroke-linejoin="round">
+            <path d="M3 11c0-4 3.1-7 7-7h4c3.9 0 7 3 7 7 0 3.5-2.4 6.4-5.5 6.9v2.4l-3.5-2h-2c-3.9 0-7-3-7-7z"/>
+          </svg>
+        </div>
+WeChat
       </div>
       <div class="app">
         <div class="icon"><svg viewBox="0 0 24 24" fill="none" stroke="#111" stroke-width="1.6"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20c0-3.6 2.9-6.5 6.5-6.5s6.5 2.9 6.5 6.5"/><path d="M15.5 4.6a3.5 3.5 0 010 6.8M18 13.8c2 .9 3.5 3.3 3.5 6.2"/></svg></div>朋友圈
@@ -118,7 +132,48 @@
         <div id="changeChatBg">更换聊天背景</div>
         <div id="clearChat" style="color:#e55">清空聊天记录</div>
       </div>
+       <!-- 对方来电 -->
+    <div class="call-banner" id="callBanner">
+      <div class="call-ava" id="callAva"></div>
+      <div class="call-info">
+        <div class="call-name" id="callName">Mr.Left</div>
+        <div class="call-sub">正在来电</div>
+      </div>
+      <div style="flex:1"></div>
+      <button class="call-btn call-reject" id="callReject">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><path d="M12 9c-1.6 0-3.1.3-4.5.8v3.1c0 .4-.2.8-.6 1-1 .5-1.9 1.2-2.7 2-.2.2-.5.3-.7.3-.3 0-.5-.1-.7-.3L.5 13.6c-.2-.2-.3-.4-.3-.7 0-.3.1-.5.3-.7C3.4 9.5 7.5 7.5 12 7.5s8.6 2 11.5 4.7c.2.2.3.4.3.7 0 .3-.1.5-.3.7l-2.3 2.3c-.2.2-.4.3-.7.3-.3 0-.5-.1-.7-.3-.8-.8-1.7-1.5-2.7-2-.3-.2-.6-.6-.6-1V9.8C15.1 9.3 13.6 9 12 9z"/></svg>
+      </button>
+      <button class="call-btn call-accept" id="callAccept">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C9.6 21 3 14.4 3 6c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1l-2.3 2.2z"/></svg>
+      </button>
     </div>
+
+    <!-- 通话中浮窗 -->
+    <div class="call-float" id="callFloat">
+      <div class="call-ava" id="callFloatAva"></div>
+      <div class="call-info">
+        <div class="call-name" id="callFloatName">Mr.Left</div>
+      </div>
+      <div id="callTimer" style="font-size:12px;color:#aaa;flex-shrink:0">00:00</div>
+      <button class="call-btn call-hang" id="callEnd">
+        <svg width="22" height="22" viewBox="0 0 24 24" fill="#fff">
+          <path d="M12 9c-1.6 0-3.1.3-4.5.8v3.1c0 .4-.2.8-.6 1-1 .5-1.9 1.2-2.7 2-.2.2-.5.3-.7.3-.3 0-.5-.1-.7-.3L.5 13.6c-.2-.2-.3-.4-.3-.7 0-.3.1-.5.3-.7C3.4 9.5 7.5 7.5 12 7.5s8.6 2 11.5 4.7c.2.2.3.4.3.7 0 .3-.1.5-.3.7l-2.3 2.3c-.2.2-.4.3-.7.3-.3 0-.5-.1-.7-.3-.8-.8-1.7-1.5-2.7-2-.3-.2-.6-.6-.6-1V9.8C15.1 9.3 13.6 9 12 9z"/>
+        </svg>
+      </button>
+    </div>
+    <!-- 拨出横幅 -->
+    <div class="call-banner" id="dialBanner">
+      <div class="call-ava" id="dialAva"></div>
+      <div class="call-info">
+        <div class="call-name" id="dialName">Mr.Left</div>
+        <div class="call-sub">正在拨出...</div>
+      </div>
+      <div style="flex:1"></div>
+      <button class="call-btn call-reject" id="dialCancel">
+        <svg width="20" height="20" viewBox="0 0 24 24" fill="#fff"><path d="M6.6 10.8c1.4 2.8 3.8 5.1 6.6 6.6l2.2-2.2c.3-.3.7-.4 1-.2 1.1.4 2.3.6 3.6.6.6 0 1 .4 1 1V20c0 .6-.4 1-1 1C9.6 21 3 14.4 3 6c0-.6.4-1 1-1h3.5c.6 0 1 .4 1 1 0 1.3.2 2.5.6 3.6.1.3 0 .7-.2 1l-2.3 2.2z"/></svg>
+      </button>
+    </div>
+ </div>
     <!-- 引用预览条 -->
     <div class="quote-bar" id="quoteBar" style="display:none">
       <div class="quote-preview" id="quotePreview"></div>
@@ -217,7 +272,20 @@
     </div>
 
   </div>
-
+     <!-- 拍一拍弹层 -->
+    <div class="tf-sheet" id="patSheet">
+      <div class="tf-sheet-inner">
+        <h4>拍一拍</h4>
+        <div class="pat-list" id="patList"></div>
+        <div style="display:flex;gap:10px;margin-top:14px">
+          <input type="text" id="patInput" placeholder="输入新动作" style="flex:1;border:none;background:#f5f5f5;border-radius:16px;padding:0 14px;font-size:14px;outline:none;height:44px;font-family:inherit">
+          <button id="patAddBtn" style="border:none;background:#111;color:#fff;border-radius:16px;padding:0 16px;font-size:14px;cursor:pointer;font-family:inherit;white-space:nowrap">添加</button>
+        </div>
+        <div style="text-align:center;margin-top:12px">
+          <button style="border:none;background:#f0f0f0;border-radius:16px;padding:8px 16px;font-size:13px;color:#666;cursor:pointer;font-family:inherit" onclick="$('patSheet').classList.remove('show')">完成</button>
+        </div>
+      </div>
+    </div>
   <!-- ===== 字卡库页 ===== -->
   <div class="page" id="cardsPage" style="background:#f7f7f7">
     <div class="cl-head">
@@ -279,17 +347,29 @@
         </div>
         <div class="sl-wrap">
           <div class="prob-row"><span>表情包概率</span><b id="emojiProbVal">50%</b></div>
-          <input type="range" id="emojiProb" min="0" max="100" step="10" value="50">
+          <input type="range" id="emojiProb" min="0" max="100" step="1" value="50">
           <div class="prob-tip">0% 只发字卡，100% 只发表情包</div>
         </div>
         <div class="sl-wrap">
           <div class="prob-row"><span>对方引用概率</span><b id="quoteProbVal">30%</b></div>
-          <input type="range" id="quoteProb" min="0" max="100" step="10" value="30">
+          <input type="range" id="quoteProb" min="0" max="100" step="1" value="30">
           <div class="prob-tip">对方回复时有此概率引用你最近一条消息</div>
         </div>        <div class="sl-wrap">
           <div class="prob-row"><span>对方转账概率</span><b id="peerTfProbVal">20%</b></div>
-          <input type="range" id="peerTfProb" min="0" max="100" step="10" value="20">
+          <input type="range" id="peerTfProb" min="0" max="100" step="1" value="20">
           <div class="prob-tip">对方回复时有此概率给你转账</div>
+        </div>        <div class="sl-wrap">
+          <div class="prob-row"><span>对方拍一拍概率</span><b id="patProbVal">30%</b></div>
+          <input type="range" id="patProb" min="0" max="100" step="1" value="30">
+          <div class="prob-tip">你拍对方后有此概率对方拍回</div>
+        </div>        <div class="sl-wrap">
+          <div class="prob-row"><span>对方来电概率</span><b id="callProbVal">10%</b></div>
+          <input type="range" id="callProb" min="0" max="100" step="1" value="10">
+          <div class="prob-tip">每次对方回复时有此概率触发来电</div>
+        </div>         <div class="sl-wrap">
+          <div class="prob-row"><span>对方接听概率</span><b id="callAnswerProbVal">60%</b></div>
+          <input type="range" id="callAnswerProb" min="0" max="100" step="1" value="60">
+          <div class="prob-tip">你打给对方时有此概率对方接听</div>
         </div>
         <div class="sl-wrap">
           <div class="sl-row"><span>对方转账金额</span></div>
@@ -300,6 +380,14 @@
       <div class="set-card" style="margin-top:14px;text-align:center">
         <button class="backup-btn" id="backupBtn">📦 全量备份</button>
         <div class="prob-tip" style="margin-top:8px">保存所有数据到本地文件</div>
+      </div>
+      <div class="set-card" style="margin-top:14px;text-align:center">
+        <button class="backup-btn" id="restoreBtn">✨ 全量导入</button>
+        <div class="prob-tip" style="margin-top:8px">从备份文件恢复所有数据</div>
+      </div>
+      <div class="set-card" style="margin-top:14px;text-align:center">
+        <button class="backup-btn" id="testBannerBtn">测试横幅</button>
+        <div class="prob-tip" style="margin-top:8px">预览消息通知横幅效果</div>
       </div>
       <div class="set-card" style="margin-top:14px;text-align:center">
         <button class="del-all-btn" id="resetBtn">恢复出厂设置</button>

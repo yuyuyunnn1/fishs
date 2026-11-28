@@ -42,7 +42,6 @@ function tick() {
 }
 tick(); setInterval(tick, 1000);
 
-// ── 图片 ──────────────────────────────────────────────────
 let currentImgTarget = null;
 const imgMap = JSON.parse(ls.get(KEY.imgs) || '{}');
 
@@ -90,14 +89,12 @@ $('filePicker').addEventListener('change', e => {
   e.target.value = '';
 });
 
-// ── 昵称 / 签名 ───────────────────────────────────────────
 const nameEl = $('nameEl'), bioEl = $('bioEl');
 if (ls.get(KEY.name)) nameEl.textContent = ls.get(KEY.name);
 if (ls.get(KEY.bio))  bioEl.textContent  = ls.get(KEY.bio);
 nameEl.addEventListener('blur', () => ls.set(KEY.name, nameEl.textContent));
 bioEl .addEventListener('blur', () => ls.set(KEY.bio,  bioEl.textContent));
 
-// ── 播放器 ────────────────────────────────────────────────
 let playing = false;
 $('playBtn').onclick = () => {
   playing = !playing;
@@ -106,7 +103,6 @@ $('playBtn').onclick = () => {
 };
 $('heartBtn').onclick = () => $('heartBtn').classList.toggle('liked');
 
-// ── 页面切换 ──────────────────────────────────────────────
 function openPage(id)  { $(id).classList.add('open'); }
 function closePage(id) { $(id).classList.remove('open'); }
 
@@ -122,7 +118,6 @@ $('openChat') .addEventListener('click', () => { renderMsgs(); openPage('chatPag
 $('openCards').addEventListener('click', () => { renderCardsPage(); openPage('cardsPage'); });
 $('openSet')  .addEventListener('click', () => openPage('setPage'));
 
-// ── 底部导航 ──────────────────────────────────────────────
 const dockItems = [...document.querySelectorAll('.dock .dicon')];
 function setNav(i) { dockItems.forEach((d,k) => d.classList.toggle('active', k === i)); }
 dockItems[0].addEventListener('click', () => { closePage('cardsPage'); closePage('setPage'); setNav(0); });
@@ -130,7 +125,6 @@ dockItems[1].addEventListener('click', () => { closePage('setPage'); setNav(1); 
 dockItems[2].addEventListener('click', () => { closePage('cardsPage'); setNav(2); });
 setNav(0);
 
-// ── 字卡库数据 ────────────────────────────────────────────
 let cardData  = JSON.parse(ls.get(KEY.cards)  || '{"未分组":[]}');
 let groupList = JSON.parse(ls.get(KEY.groups) || '["未分组"]');
 let replyGroup = ls.get(KEY.replyGroup) || '全部';
@@ -273,7 +267,6 @@ new MutationObserver(() => {
   $('phone').classList.toggle('modal-open', $('modalBg').classList.contains('show'));
 }).observe($('modalBg'), {attributes:true, attributeFilter:['class']});
 
-// ── 导入导出 ─────────────────────────────────────────────
 $('exportBtn').addEventListener('click', () => {
   const json = JSON.stringify({groups:groupList, cards:cardData}, null, 2);
   const a = Object.assign(document.createElement('a'), {href: URL.createObjectURL(new Blob([json],{type:'application/json'})), download:'字卡库.json'});
@@ -319,8 +312,12 @@ $('delAllBtn').addEventListener('click', () => {
   showToast('已全部删除');
 });
 
-// ── 设置 ─────────────────────────────────────────────────
-const cfg = Object.assign({cMin:1,cMax:3,wMin:4,wMax:20,prob:50,quoteProb:30,peerTfProb:20,peerTfAmts:'5.20,13.14,52'}, JSON.parse(ls.get('home_chatCfg')||'{}'));
+const cfg = Object.assign({
+  cMin:1, cMax:3, wMin:4, wMax:20, prob:50,
+  quoteProb:30, peerTfProb:20, peerTfAmts:'5.20,13.14,52',
+  patProb:30, callProb:10, callAnswerProb:60
+}, JSON.parse(ls.get('home_chatCfg')||'{}'));
+
 function saveCfg() { ls.set('home_chatCfg', JSON.stringify(cfg)); }
 
 function syncCfgUI() {
@@ -331,6 +328,9 @@ function syncCfgUI() {
   $('quoteProb').value = cfg.quoteProb; $('quoteProbVal').textContent = cfg.quoteProb+'%';
   $('peerTfProb').value = cfg.peerTfProb; $('peerTfProbVal').textContent = cfg.peerTfProb+'%';
   $('peerTfAmts').value = cfg.peerTfAmts || '';
+  $('patProb').value = cfg.patProb; $('patProbVal').textContent = cfg.patProb+'%';
+  $('callProb').value = cfg.callProb; $('callProbVal').textContent = cfg.callProb+'%';
+  $('callAnswerProb').value = cfg.callAnswerProb; $('callAnswerProbVal').textContent = cfg.callAnswerProb+'%';
 }
 syncCfgUI();
 
@@ -347,8 +347,10 @@ $('emojiProb').addEventListener('input', () => { cfg.prob=parseInt($('emojiProb'
 $('quoteProb').addEventListener('input', () => { cfg.quoteProb=parseInt($('quoteProb').value); saveCfg(); syncCfgUI(); });
 $('peerTfProb').addEventListener('input', () => { cfg.peerTfProb=parseInt($('peerTfProb').value); saveCfg(); syncCfgUI(); });
 $('peerTfAmts').addEventListener('input', () => { cfg.peerTfAmts=$('peerTfAmts').value; saveCfg(); });
+$('patProb').addEventListener('input', () => { cfg.patProb=parseInt($('patProb').value); saveCfg(); syncCfgUI(); });
+$('callProb').addEventListener('input', () => { cfg.callProb=parseInt($('callProb').value); saveCfg(); syncCfgUI(); });
+$('callAnswerProb').addEventListener('input', () => { cfg.callAnswerProb=parseInt($('callAnswerProb').value); saveCfg(); syncCfgUI(); });
 
-// ── 全量备份 ──────────────────────────────────────────────
 $('backupBtn').addEventListener('click', () => {
   const data = {};
   for (let i=0; i<localStorage.length; i++) {
@@ -362,7 +364,31 @@ $('backupBtn').addEventListener('click', () => {
   a.click(); showToast('备份已下载');
 });
 
-// ── 恢复出厂 ──────────────────────────────────────────────
+$('restoreBtn').addEventListener('click', () => {
+  $('restorePicker').click();
+});
+
+$('restorePicker').addEventListener('change', e => {
+  const file = e.target.files[0];
+  if (!file) return;
+  const reader = new FileReader();
+  reader.onload = ev => {
+    try {
+      const data = JSON.parse(ev.target.result);
+      let count = 0;
+      for (const key in data) {
+        localStorage.setItem(key, data[key]);
+        count++;
+      }
+      showToast(`已导入 ${count} 条数据，即将重启`);
+      setTimeout(() => location.reload(), 1500);
+    } catch {
+      showToast('导入失败，文件格式错误');
+    }
+  };
+  reader.readAsText(file);
+  e.target.value = '';
+});
 $('resetBtn').addEventListener('click', () => {
   if (!confirm('确定恢复出厂设置？所有数据都会清除')) return;
   if (!confirm('真的确定吗？不可撤销')) return;
@@ -371,7 +397,6 @@ $('resetBtn').addEventListener('click', () => {
   setTimeout(() => location.reload(), 1200);
 });
 
-// ── 聊天 ─────────────────────────────────────────────────
 let msgList = JSON.parse(ls.get(KEY.msgs) || '[]');
 let isTyping = false;
 let quoteMsg = null;
@@ -415,6 +440,10 @@ function renderMsgs() {
         <div class="cc-opts">${opts}</div>
         <div class="cc-foot">${m.picked !== null ? '抉择已完成' : '等待对方选择'}</div>
       </div>`;
+    } else if (m.pat) {
+      return `<div class="pat-msg">${esc(m.text)}</div>`;
+    } else if (m.call) {
+      return `<div class="call-msg">${esc(m.text)}</div>`;
     } else if (m.emoji) {
       content = `<img src="${m.emoji}" style="max-width:160px;border-radius:16px;display:block">`;
     } else {
@@ -436,9 +465,16 @@ function renderMsgs() {
 function addMsg(from, text, emoji, quote) {
   msgList.push({from, text:text||'', emoji:emoji||null, quote:quote||null, time:nowHM()});
   saveMsgs(); renderMsgs();
+  if (from === 'peer' && !$('chatPage').classList.contains('open')) {
+    showNotificationBanner(getPeerName(), emoji ? '[图片]' : (text || ''), imgMap.peer || '', false);
+  }
 }
 
-// ── 引用 ─────────────────────────────────────────────────
+function addPatMsg(from, text) {
+  msgList.push({from, text, pat:true, time:nowHM()});
+  saveMsgs(); renderMsgs();
+}
+
 let msgHoldTimer = null;
 let selectedMsgIdx = null;
 
@@ -484,7 +520,6 @@ $('quoteCancelBtn').addEventListener('click', () => {
   $('quoteBar').style.display = 'none';
 });
 
-// ── 发送 ─────────────────────────────────────────────────
 $('sendBtn').addEventListener('click', sendMsg);
 $('msgInput').addEventListener('keydown', e => { if (e.key==='Enter') sendMsg(); });
 
@@ -498,7 +533,6 @@ function sendMsg() {
   peerReply();
 }
 
-// ── 聊天菜单 ─────────────────────────────────────────────
 $('moreBtn').addEventListener('click', e => { e.stopPropagation(); $('chatMenu').classList.toggle('show'); });
 document.addEventListener('click', () => $('chatMenu').classList.remove('show'));
 
@@ -516,7 +550,6 @@ $('clearChat').addEventListener('click', () => {
 
 if (ls.get(KEY.peerName)) $('peerName').textContent = ls.get(KEY.peerName);
 
-// ── 对方回复 ─────────────────────────────────────────────
 function setTyping(on) {
   const s = $('peerState');
   s.textContent = on ? '对方正在输入中...' : 'ONLINE';
@@ -548,7 +581,11 @@ function peerReply() {
   const myLastMsg = [...msgList].reverse().find(m => m.from==='me');
   let i = 0;
   function next() {
-    if (i>=count) { isTyping=false; setTyping(false); return; }
+    if (i>=count) {
+      isTyping=false; setTyping(false);
+      triggerCall();
+      return;
+    }
     const wait = i===0 ? rand(cfg.wMin,cfg.wMax)*1000 : 400;
     setTimeout(() => {
       setTyping(true);
@@ -568,13 +605,15 @@ function peerReply() {
   next();
 }
 
-// ── 转账 ─────────────────────────────────────────────────
 let tfOpenIdx = null;
 
 function addTransfer(from, amount, status) {
   const m = { from, type:'transfer', amount, status: status||'pending', time: nowHM(), uid: Date.now()+'-'+Math.random() };
   msgList.push(m);
   saveMsgs(); renderMsgs();
+  if (from === 'peer' && !$('chatPage').classList.contains('open')) {
+    showNotificationBanner(getPeerName(), `转账 ¥${Number(amount).toFixed(2)}`, imgMap.peer || '', false);
+  }
   return m.uid;
 }
 
@@ -615,7 +654,6 @@ $('tfRefund').addEventListener('click', () => {
 });
 
 $('tfPop').addEventListener('click', e => { if (e.target === $('tfPop')) $('tfPop').classList.remove('show'); });
-
 $('tfCancel').addEventListener('click', () => $('tfSheet').classList.remove('show'));
 $('tfSheet').addEventListener('click', e => { if (e.target === $('tfSheet')) $('tfSheet').classList.remove('show'); });
 
@@ -632,7 +670,6 @@ $('tfConfirm').addEventListener('click', () => {
   }, rand(cfg.wMin, cfg.wMax) * 1000);
 });
 
-// ── 抉择 ─────────────────────────────────────────────────
 $('chCancel').addEventListener('click', () => $('chSheet').classList.remove('show'));
 $('chSheet').addEventListener('click', e => { if (e.target === $('chSheet')) $('chSheet').classList.remove('show'); });
 
@@ -642,13 +679,8 @@ $('chConfirm').addEventListener('click', () => {
   if (!q) return showToast('请输入标题');
   if (opts.length < 2) return showToast('至少要两个选项');
   $('chSheet').classList.remove('show');
-  msgList.push({
-    from:'me', type:'choice', question:q,
-    options: opts.slice(0,6), picked:null,
-    time: nowHM(), uid:'ch-'+Date.now()
-  });
+  msgList.push({ from:'me', type:'choice', question:q, options: opts.slice(0,6), picked:null, time: nowHM(), uid:'ch-'+Date.now() });
   saveMsgs(); renderMsgs();
-
   const idx = msgList.length - 1;
   isTyping = true;
   setTimeout(() => {
@@ -659,8 +691,7 @@ $('chConfirm').addEventListener('click', () => {
         m.picked = Math.floor(Math.random() * m.options.length);
         saveMsgs(); renderMsgs();
       }
-      isTyping = false;
-      setTyping(false);
+      isTyping = false; setTyping(false);
     }, rand(800, 1800));
   }, rand(cfg.wMin, cfg.wMax) * 1000);
 });
@@ -673,7 +704,45 @@ window.pickChoice = (idx, i) => {
   saveMsgs(); renderMsgs();
 };
 
-// ── 他说：等设定时间后发一条 ──────────────────────────────
+let patList = JSON.parse(ls.get('home_patList') || '["拍了拍对方的头","戳了戳对方的脸颊","拥住了对方","给对方比了个心","牵起了对方的手"]');
+
+function savePatList() { ls.set('home_patList', JSON.stringify(patList)); }
+
+function renderPatList() {
+  const list = $('patList');
+  if (!patList.length) {
+    list.innerHTML = '<div style="text-align:center;color:#bbb;padding:30px 0;font-size:13px">没有拍一拍动作，请先添加</div>';
+    return;
+  }
+  list.innerHTML = patList.map((p,i) =>
+    `<div class="pat-item" onclick="doPat(${i})">
+      <div class="pat-item-text">${esc(p)}</div>
+      <button class="pat-item-del" onclick="event.stopPropagation();delPatAction(${i})">×</button>
+    </div>`
+  ).join('');
+}
+
+window.delPatAction = i => { patList.splice(i,1); savePatList(); renderPatList(); };
+
+window.doPat = i => {
+  if (!patList[i]) return;
+  if (isTyping) return;
+  const action = patList[i];
+  $('patSheet').classList.remove('show');
+  addPatMsg('me', action);
+  peerReply();
+};
+
+$('patAddBtn').addEventListener('click', () => {
+  const text = $('patInput').value.trim();
+  if (!text) return showToast('请输入内容');
+  if (patList.includes(text)) return showToast('已存在');
+  patList.push(text);
+  savePatList(); renderPatList();
+  $('patInput').value = '';
+  showToast('已添加');
+});
+
 function peerSay() {
   if (isTyping) return;
   const texts = getGroupItems(replyGroup).filter(c => c.enabled).map(c => c.text);
@@ -686,13 +755,11 @@ function peerSay() {
       const p = pool[Math.floor(Math.random() * pool.length)];
       if (p.emoji) addMsg('peer', '', p.emoji, null);
       else addMsg('peer', p.text, null, null);
-      isTyping = false;
-      setTyping(false);
+      isTyping = false; setTyping(false);
     }, rand(800, 1800));
   }, rand(cfg.wMin, cfg.wMax) * 1000);
 }
 
-// ── 表情库 ───────────────────────────────────────────────
 let emojis = JSON.parse(ls.get(EMOJI_KEY) || '[]');
 function saveEmojis() { ls.set(EMOJI_KEY, JSON.stringify(emojis)); }
 
@@ -707,9 +774,7 @@ function renderEmojiList() {
   ).join('');
 }
 
-$('openEmojiBtn').addEventListener('click', () => {
-  $('plusPanel').classList.toggle('show');
-});
+$('openEmojiBtn').addEventListener('click', () => { $('plusPanel').classList.toggle('show'); });
 
 document.querySelectorAll('.pp-item').forEach(el => {
   el.addEventListener('click', () => {
@@ -726,8 +791,13 @@ document.querySelectorAll('.pp-item').forEach(el => {
       $('chTitle').value = '';
       $('chOpts').value = '';
       $('chSheet').classList.add('show');
+    } else if (act === 'pat') {
+      renderPatList();
+      $('patSheet').classList.add('show');
     } else if (act === 'talk') {
       peerSay();
+    } else if (act === 'call') {
+      startDialOut();
     } else {
       showToast('这个功能还没做');
     }
@@ -757,7 +827,6 @@ window.sendEmoji = i => {
   peerReply();
 };
 
-// ── 聊天背景 ──────────────────────────────────────────────
 function applyChatBg() {
   const bg = ls.get(BG_KEY);
   $('msgs').style.backgroundImage = bg ? `url("${bg}")` : '';
@@ -774,16 +843,251 @@ $('bgPicker').addEventListener('change', e => {
   e.target.value='';
 });
 
-// ── 后台保活 ──────────────────────────────────────────────
 let inactiveTime = 0;
 setInterval(() => {
   inactiveTime++;
-  if (inactiveTime > 1800) {
-    document.title = document.title;
-    inactiveTime = 0;
-  }
+  if (inactiveTime > 1800) { document.title = document.title; inactiveTime = 0; }
 }, 1000);
-
 ['click', 'scroll', 'keydown', 'touchstart'].forEach(ev => {
   document.addEventListener(ev, () => { inactiveTime = 0; }, true);
+});
+
+let callTimer = null;
+let callSeconds = 0;
+let callActive = false;
+let callFloatMini = false;
+
+function getPeerName() { return $('peerName') ? $('peerName').textContent : 'Mr.Left'; }
+function getPeerAva()  { return imgMap.peer ? `url("${imgMap.peer}")` : 'var(--peer)'; }
+
+// 确保浮窗挂在 body 下，不受页面切换影响
+function ensureCallFloatOnBody() {
+  const f = $('callFloat');
+  const b = $('callBanner');
+  const d = $('dialBanner');
+  if (f && f.parentElement !== document.body) document.body.appendChild(f);
+  if (b && b.parentElement !== document.body) document.body.appendChild(b);
+  if (d && d.parentElement !== document.body) document.body.appendChild(d);
+}
+ensureCallFloatOnBody();
+
+function addCallMsg(from, text) {
+  msgList.push({ from, call:'ended', text, time: nowHM() });
+  saveMsgs();
+  if ($('chatPage').classList.contains('open')) renderMsgs();
+}
+
+function triggerCall() {
+  if (callActive) return;
+  if (Math.random() * 100 >= cfg.callProb) return;
+  callActive = true;
+  ensureCallFloatOnBody();
+  $('callAva').style.backgroundImage = getPeerAva();
+  $('callName').textContent = getPeerName();
+  $('callBanner').classList.add('show');
+  const autoReject = setTimeout(() => {
+    if ($('callBanner').classList.contains('show')) {
+      rejectCall(true);
+    }
+  }, 10000);
+  $('callBanner').dataset.timer = autoReject;
+}
+
+function rejectCall(auto) {
+  clearTimeout(Number($('callBanner').dataset.timer));
+  $('callBanner').classList.remove('show');
+  callActive = false;
+  const text = auto
+    ? '10秒内未接听，已自动挂断'
+    : '已拒绝通话';
+  addCallMsg('me', text);
+}
+
+function acceptCall() {
+  clearTimeout(Number($('callBanner').dataset.timer));
+  $('callBanner').classList.remove('show');
+  callSeconds = 0; callFloatMini = false;
+  ensureCallFloatOnBody();
+  $('callFloatAva').style.backgroundImage = getPeerAva();
+  $('callFloatName').textContent = getPeerName();
+  $('callTimer').textContent = '00:00';
+  const f = $('callFloat');
+  f.classList.remove('mini');
+  // 重置位置到顶部居中
+  f.style.left = '50%';
+  f.style.right = 'auto';
+  f.style.top = '16px';
+  f.style.transform = 'translateX(-50%)';
+  f.classList.add('show');
+  callTimer = setInterval(() => {
+    callSeconds++;
+    const m = String(Math.floor(callSeconds/60)).padStart(2,'0');
+    const s = String(callSeconds%60).padStart(2,'0');
+    $('callTimer').textContent = `${m}:${s}`;
+  }, 1000);
+  makeDraggableMini($('callFloat'));
+}
+
+function endCall() {
+  clearInterval(callTimer);
+  $('callFloat').classList.remove('show');
+  $('callFloat').classList.remove('mini');
+  callActive = false; callFloatMini = false;
+  const m = String(Math.floor(callSeconds/60)).padStart(2,'0');
+  const s = String(callSeconds%60).padStart(2,'0');
+  addCallMsg('me', `通话已结束 ${m}:${s}`);
+}
+
+$('callReject').addEventListener('click', () => rejectCall(false));
+$('callAccept').addEventListener('click', acceptCall);
+$('callEnd').addEventListener('click', endCall);
+
+// 点击头像缩小浮窗
+document.addEventListener('click', e => {
+  if (callActive && $('callFloat').classList.contains('show')) {
+    if (e.target.id === 'callFloatAva' || (e.target.closest && e.target.closest('#callFloatAva'))) {
+      const f = $('callFloat');
+      callFloatMini = !callFloatMini;
+      if (callFloatMini) {
+        f.classList.add('mini');
+        f.style.left = 'auto';
+        f.style.right = '16px';
+        f.style.top = '16px';
+        f.style.transform = 'none';
+      } else {
+        f.classList.remove('mini');
+        f.style.left = '50%';
+        f.style.right = 'auto';
+        f.style.top = '16px';
+        f.style.transform = 'translateX(-50%)';
+      }
+    }
+  }
+}, true);
+
+function startDialOut() {
+  if (callActive) return showToast('通话中');
+  callActive = true;
+  ensureCallFloatOnBody();
+  $('dialAva').style.backgroundImage = getPeerAva();
+  $('dialName').textContent = getPeerName();
+  $('dialBanner').classList.add('show');
+
+  const wait = rand(2000, 6000);
+  const dialTimerHandle = setTimeout(() => {
+    $('dialBanner').classList.remove('show');
+    if (Math.random() * 100 < cfg.callAnswerProb) {
+      callSeconds = 0; callFloatMini = false;
+      $('callFloatAva').style.backgroundImage = getPeerAva();
+      $('callFloatName').textContent = getPeerName();
+      $('callTimer').textContent = '00:00';
+      const f = $('callFloat');
+      f.classList.remove('mini');
+      f.style.left = '50%';
+      f.style.right = 'auto';
+      f.style.top = '16px';
+      f.style.transform = 'translateX(-50%)';
+      f.classList.add('show');
+      callTimer = setInterval(() => {
+        callSeconds++;
+        const m2 = String(Math.floor(callSeconds/60)).padStart(2,'0');
+        const s2 = String(callSeconds%60).padStart(2,'0');
+        $('callTimer').textContent = `${m2}:${s2}`;
+      }, 1000);
+      makeDraggableMini(f);
+    } else {
+      callActive = false;
+      addCallMsg('peer', getPeerName() + ' 拒绝了通话');
+    }
+  }, wait);
+
+  $('dialBanner').dataset.timer = dialTimerHandle;
+}
+
+$('dialCancel').addEventListener('click', () => {
+  clearTimeout(Number($('dialBanner').dataset.timer));
+  $('dialBanner').classList.remove('show');
+  callActive = false;
+  addCallMsg('me', '已取消通话');
+});
+
+// 仅缩小状态可拖动
+function makeDraggableMini(el) {
+  let startX, startY, ox, oy, dragging = false;
+  function onStart(e) {
+    if (!el.classList.contains('mini')) return;
+    dragging = true;
+    const t = e.touches ? e.touches[0] : e;
+    startX = t.clientX; startY = t.clientY;
+    const r = el.getBoundingClientRect();
+    ox = r.left; oy = r.top;
+    document.addEventListener('mousemove', onMove);
+    document.addEventListener('touchmove', onMove, {passive:false});
+    document.addEventListener('mouseup', onEnd);
+    document.addEventListener('touchend', onEnd);
+  }
+  function onMove(e) {
+    if (!dragging) return;
+    e.preventDefault();
+    const t = e.touches ? e.touches[0] : e;
+    const dx = t.clientX - startX, dy = t.clientY - startY;
+    let nx = ox + dx;
+    let ny = oy + dy;
+    nx = Math.max(0, Math.min(nx, window.innerWidth - el.offsetWidth));
+    ny = Math.max(0, Math.min(ny, window.innerHeight - el.offsetHeight));
+    el.style.left = nx + 'px';
+    el.style.right = 'auto';
+    el.style.top = ny + 'px';
+    el.style.transform = 'none';
+  }
+  function onEnd() {
+    dragging = false;
+    document.removeEventListener('mousemove', onMove);
+    document.removeEventListener('touchmove', onMove);
+    document.removeEventListener('mouseup', onEnd);
+    document.removeEventListener('touchend', onEnd);
+  }
+  el.removeEventListener('mousedown', el._dragStart);
+  el.removeEventListener('touchstart', el._dragStartT);
+  el._dragStart = onStart;
+  el._dragStartT = onStart;
+  el.addEventListener('mousedown', onStart);
+  el.addEventListener('touchstart', onStart, {passive:true});
+}
+// ===== 消息通知横幅 =====
+let nbTimer = null;
+let nbStartY = 0;
+let nbStartTime = 0;
+
+function showNotificationBanner(name, msg, avaUrl, isTest) {
+  const banner = $('nbBanner');
+  $('nbName').textContent = name;
+  $('nbMsg').textContent = isTest ? '❍⩊❍ 这是一条测试消息' : msg;
+  $('nbAva').style.backgroundImage = avaUrl ? `url("${avaUrl}")` : '';
+  if (nbTimer) clearTimeout(nbTimer);
+  banner.classList.add('show');
+  nbTimer = setTimeout(() => banner.classList.remove('show'), 5000);
+}
+
+// 横幅上滑消失手势
+$('nbBanner').addEventListener('touchstart', e => {
+  nbStartY = e.touches[0].clientY;
+  nbStartTime = Date.now();
+}, {passive: true});
+
+$('nbBanner').addEventListener('touchmove', e => {
+  const dy = e.touches[0].clientY - nbStartY;
+  if (dy < -30) {
+    $('nbBanner').classList.remove('show');
+    if (nbTimer) clearTimeout(nbTimer);
+  }
+}, {passive: true});
+
+$('nbBanner').addEventListener('touchend', () => {
+  nbStartY = 0;
+  nbStartTime = 0;
+}, {passive: true});
+
+$('testBannerBtn').addEventListener('click', () => {
+  showNotificationBanner(getPeerName(), '这是一条测试消息内容', imgMap.peer || '', true);
 });

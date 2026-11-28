@@ -153,7 +153,7 @@ body {
 .row .ava { width: 40px; height: 40px; border-radius: 50%; background-size: cover; background-position: center; flex-shrink: 0; }
 .row.me .ava { background-image: var(--avatar); }
 .row.peer .ava { background-image: var(--peer); }
-.bwrap { max-width: 72%; display: flex; flex-direction: column; }
+.bwrap { max-width: 72%; display: flex; flex-direction: column; align-items: flex-start; min-width: 0; }
 .row.me .bwrap { align-items: flex-end; }
 
 .bubble { 
@@ -371,7 +371,7 @@ button { color: inherit; -webkit-appearance: none; appearance: none; font-family
 .quote-bar { display: flex; align-items: center; padding: 8px 14px; background: #f7f7f7; border-top: 1px solid #eee; gap: 10px; }
 .quote-preview { flex: 1; font-size: 12px; color: #888; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; border-left: 3px solid #111; padding-left: 8px; }
 .quote-cancel { background: none; border: none; font-size: 20px; color: #aaa; cursor: pointer; }
-.quote-block { background: rgba(0,0,0,.06); border-left: 3px solid #999; border-radius: 6px; padding: 5px 8px; font-size: 12px; color: #888; margin-bottom: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px; }
+.quote-block { background: rgba(0,0,0,.06); border-left: 3px solid #999; border-radius: 6px; padding: 5px 8px; font-size: 12px; color: #888; margin-bottom: 5px; white-space: nowrap; overflow: hidden; text-overflow: ellipsis; max-width: 200px; box-sizing: border-box; }
 .row.me .quote-block { border-left-color: #555; background: rgba(255,255,255,.12); color: rgba(255,255,255,.7); }
 
 /* ===== 消息长按菜单 ===== */
@@ -561,5 +561,180 @@ input, textarea { -webkit-user-select: text; }
   right: 8px;
   bottom: 9px;
 }
+/* ===== 拍一拍 ===== */
+.pat-list { max-height: 240px; overflow-y: auto; }
+.pat-item { background: #fff; border-radius: 14px; padding: 12px 14px; margin-bottom: 10px; display: flex; align-items: center; justify-content: space-between; box-shadow: 0 2px 6px rgba(0,0,0,.04); }
+.pat-item-text { font-size: 14px; color: #333; }
+.pat-item-del { background: #f0f0f0; border: none; border-radius: 50%; width: 28px; height: 28px; display: grid; place-items: center; cursor: pointer; color: #999; font-size: 16px; }
+/* 拍一拍消息居中 */
+.pat-msg { text-align: center; width: 100%; font-size: 13px; color: #aaa; padding: 8px 0; }
+/* ===== 电话功能 ===== */
+.call-banner {
+  position: fixed;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 9.2vw);
+  max-width: 480px;
+  background: #1c1c1e;
+  border-radius: 40px;
+  padding: 10px 14px;
+  display: none;
+  align-items: center;
+  gap: 12px;
+  z-index: 300;
+  box-shadow: 0 8px 24px rgba(0,0,0,.35);
+  transition: all .3s ease;
+}
+.call-banner.show { display: flex; }
+
+/* 通话中浮窗：两种尺寸 */
+.call-float {
+  position: fixed;
+  top: 16px;
+  left: 50%;
+  transform: translateX(-50%);
+  width: calc(100% - 9.2vw);
+  max-width: 480px;
+  background: #2c2c2e;
+  border-radius: 40px;
+  padding: 8px 12px;
+  display: none;
+  align-items: center;
+  gap: 8px;
+  z-index: 300;
+  box-shadow: 0 8px 24px rgba(0,0,0,.35);
+  touch-action: none;
+  transition: width .3s ease, border-radius .3s ease, padding .3s ease;
+  overflow: hidden;
+}
+.call-float.show { display: flex; }
+
+/* 缩小状态：胶囊浮窗 */
+.call-float.mini {
+  width: 190px;
+  border-radius: 40px;
+  padding: 6px 6px 6px 6px;
+  gap: 6px;
+  cursor: grab;
+  left: auto;
+  right: 16px;
+  transform: none;
+}
+.call-float.mini .call-info,
+.call-float.mini #callFloatName { display: none; }
+.call-float.mini .call-ava { width: 42px; height: 42px; flex-shrink: 0; }
+.call-float.mini #callTimer { font-size: 15px; font-weight: 600; color: #fff !important; flex: 1; text-align: left; padding-left: 6px; min-width: 52px; }
+.call-float.mini .call-shrink-btn { display: none; }
 
 
+.call-ava {
+  width: 44px;
+  height: 44px;
+  border-radius: 50%;
+  background-size: cover;
+  background-position: center;
+  background-color: #444;
+  flex-shrink: 0;
+  border: 2px solid rgba(255,255,255,.2);
+  transition: width .3s, height .3s;
+}
+.call-info { flex: 1; overflow: hidden; }
+.call-name { font-size: 15px; font-weight: 600; color: #fff; white-space: nowrap; }
+.call-sub { font-size: 12px; color: #aaa; margin-top: 1px; }
+.call-btn {
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  border: none;
+  cursor: pointer;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+.call-reject { background: #636366 !important; }
+.call-accept { background: #636366 !important; }
+.call-hang   { background: #636366 !important; }
+.call-btn svg {
+  width: 20px;
+  height: 20px;
+  display: block;
+  pointer-events: none;
+}
+#callFloatName { color: #fff !important; font-size: 14px; }
+#callTimer     { color: #aaa !important; font-size: 12px; }
+
+/* 结束通话 / 未接 / 拒接 —— 居中胶囊气泡 */
+.call-msg {
+  display: block;
+  width: fit-content;
+  margin: 6px auto;
+  padding: 7px 18px;
+  background: rgba(0,0,0,.08);
+  border-radius: 999px;
+  font-size: 12px;
+  color: #999;
+  text-align: center;
+}
+/* ===== 消息通知横幅 ===== */
+.nb-banner {
+  position: fixed;
+  top: calc(env(safe-area-inset-top) + 10px);
+  left: 50%;
+  transform: translateX(-50%) translateY(-140%);
+  width: calc(100% - 9.2vw);
+  max-width: 480px;
+  background: #fff;
+  border-radius: 20px;
+  padding: 12px 14px;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  box-shadow: 0 8px 28px rgba(0,0,0,.18);
+  z-index: 400;
+  transition: transform .4s cubic-bezier(.3,.8,.3,1);
+  pointer-events: auto;
+  cursor: grab;
+  touch-action: pan-y;
+}
+.nb-banner.show {
+  transform: translateX(-50%) translateY(0);
+}
+.nb-ava {
+  width: 46px;
+  height: 46px;
+  border-radius: 50%;
+  background-color: #e0e0e0;
+  background-image: var(--peer);
+  background-size: cover;
+  background-position: center;
+  flex-shrink: 0;
+}
+.nb-content { flex: 1; min-width: 0; }
+.nb-name {
+  font-size: 15px;
+  font-weight: 700;
+  color: #111;
+  margin-bottom: 2px;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.nb-msg {
+  font-size: 13px;
+  color: #999;
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+.nb-icon {
+  width: 34px;
+  height: 34px;
+  border-radius: 50%;
+  background: #f2f2f2;
+  display: grid;
+  place-items: center;
+  flex-shrink: 0;
+}
+.nb-icon svg { width: 18px; height: 18px; }
+.call-btn svg { overflow: visible; }
